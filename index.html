@@ -1,0 +1,2283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Lis & Écoute — L'application de lecture karaoké pour les élèves de Côte d'Ivoire</title>
+  <meta name="description" content="Aidez votre enfant du CP1 au CM2 à surmonter ses blocages de lecture grâce à la synchronisation audio karaoké et aux récits de la vie quotidienne ivoirienne. Conçu pour smartphone. 2 500 F CFA/mois.">
+
+  <!-- Polices Google officielles : Baloo 2 (titres), Zilla Slab (corps), Work Sans (labels/UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE « LIS & ÉCOUTE » — PALETTE TISSUS ET TERRE
+       - Fond principal : #F7EEDA (cream)
+       - Fond secondaire / cartes : #ECD9B4 (millet) & #FFFFFF
+       - Texte principal : #2B2018 (ink)
+       - Titres / sérieux pédagogique : #234B5E (indigo)
+       - Couleur d'action chaude / accent 1 : #C1652B (terracotta)
+       - Bouton principal CTA : #E8A23B (saffron) avec texte #2B2018
+       - Bouton WhatsApp / réussite : #5B8C51 (feuille) avec texte blanc
+       ========================================================================== */
+
+    :root {
+      /* Palette officielle */
+      --cream: #F7EEDA;
+      --millet: #ECD9B4;
+      --white: #FFFFFF;
+      --ink: #2B2018;
+      --indigo: #234B5E;
+      --terracotta: #C1652B;
+      --saffron: #E8A23B;
+      --leaf: #5B8C51;
+
+      /* Bordure et teintes dérivées douces */
+      --millet-border: #D8C296;
+      --saffron-light: #FDF3E3;
+      --leaf-light: #EBF3EA;
+
+      /* Typographies */
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui: 'Work Sans', sans-serif;
+
+      /* Ombres tactiles sèches (sans flou GPU) */
+      --ombre-brute: 3px 3px 0px var(--ink);
+      --rayon-carte: 14px;
+      --rayon-bouton: 12px;
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Motif signature vague */
+    .wave-svg {
+      display: block;
+      width: 100%;
+      height: 32px;
+      background: var(--cream);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    button {
+      font-family: var(--font-ui);
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    /* ==========================================================================
+       1. RÈGLE 1 : BANDEAU HAUT (fond #234B5E avec texte #F7EEDA)
+       ========================================================================== */
+    .top-banner {
+      background-color: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 14px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .top-banner-flag {
+      display: inline-block;
+      font-size: 14px;
+    }
+    .top-banner span.highlight {
+      background-color: var(--saffron);
+      color: var(--ink);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      border: 1px solid var(--ink);
+    }
+
+    /* ==========================================================================
+       HEADER / NAVIGATION
+       ========================================================================== */
+    .site-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background-color: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0px var(--ink);
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: var(--font-titre);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--indigo);
+    }
+    .brand-name span {
+      color: var(--terracotta);
+    }
+    .brand-subtitle {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .header-nav {
+      display: none;
+      font-family: var(--font-ui);
+    }
+    @media (min-width: 768px) {
+      .header-nav {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--indigo);
+      }
+      .header-nav a:hover {
+        color: var(--terracotta);
+      }
+    }
+
+    .header-cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-header-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--leaf);
+      color: #FFFFFF;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: var(--rayon-bouton);
+      border: 1.5px solid var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+    .btn-header-test {
+      display: none;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 9px 15px;
+      border-radius: var(--rayon-bouton);
+      border: 1.5px solid var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+    @media (min-width: 480px) {
+      .btn-header-test {
+        display: inline-flex;
+      }
+    }
+
+    /* ==========================================================================
+       HERO SECTION : L'appel aux parents et la promesse
+       ========================================================================== */
+    .hero-section {
+      padding: 24px 0 36px;
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+    @media (min-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 36px;
+      }
+    }
+
+    /* RÈGLE 2 : Badge "MÉTHODE BIMODALE" : bord #234B5E, fond #ECD9B4, point #C1652B */
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--millet);
+      color: var(--indigo);
+      border: 1.5px solid var(--indigo);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 5px 12px;
+      border-radius: 30px;
+      margin-bottom: 14px;
+    }
+    .hero-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--terracotta);
+    }
+
+    /* RÈGLE 3 : Titre principal : #2B2018, mais "lecture karaoké" en #C1652B */
+    .hero-title {
+      font-family: var(--font-titre);
+      font-size: clamp(28px, 6.8vw, 46px);
+      font-weight: 800;
+      line-height: 1.12;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .hero-title .accent-orange {
+      color: var(--terracotta);
+      display: inline-block;
+      position: relative;
+    }
+    .hero-title .accent-orange::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background-color: var(--millet);
+      z-index: -1;
+      border-radius: 3px;
+    }
+
+    /* RÈGLE 4 : Le paragraphe reste #2B2018 */
+    .hero-lead {
+      font-family: var(--font-corps);
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .hero-lead strong {
+      color: var(--indigo);
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+    .btn-main,
+    .btn-secondary {
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    @media (min-width: 768px) {
+      .hero-actions {
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+      }
+      .btn-main,
+      .btn-secondary {
+        width: auto;
+      }
+    }
+
+    /* Bouton principal CTA : #E8A23B (saffron) avec texte #2B2018 */
+    .btn-main {
+      gap: 10px;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      padding: 15px 22px;
+      border-radius: var(--rayon-bouton);
+      border: 2px solid var(--ink);
+      box-shadow: 4px 4px 0px var(--ink);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn-main:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+    .btn-main:hover {
+      background-color: #DE952B;
+    }
+
+    .btn-secondary {
+      gap: 8px;
+      background-color: var(--white);
+      color: var(--indigo);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 18px;
+      border-radius: var(--rayon-bouton);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0px var(--ink);
+    }
+    .btn-secondary:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    .hero-guarantees {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 20px;
+      padding-top: 14px;
+      border-top: 1.5px dashed var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--indigo);
+    }
+    .guarantee-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .guarantee-item svg {
+      color: var(--leaf);
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       DÉMO KARAOKÉ INTERACTIVE (Cœur du produit dans le Hero)
+       ========================================================================== */
+    .karaoke-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: 18px;
+      box-shadow: 6px 6px 0px var(--ink);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .karaoke-header {
+      background-color: var(--indigo);
+      color: var(--cream);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--ink);
+    }
+    .karaoke-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .story-level-badge {
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 5px;
+      border: 1px solid var(--ink);
+      text-transform: uppercase;
+    }
+    .story-title-preview {
+      font-family: var(--font-titre);
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 170px;
+    }
+    @media (min-width: 420px) {
+      .story-title-preview {
+        max-width: 240px;
+      }
+    }
+    .network-badge {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(247, 238, 218, 0.2);
+      color: var(--cream);
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Mascotte Kolo en haut de la boîte */
+    .mascot-strip {
+      background-color: var(--millet);
+      border-bottom: 1.5px solid var(--millet-border);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mascot-avatar {
+      width: 32px;
+      height: 32px;
+      background-color: var(--leaf);
+      border-radius: 50%;
+      border: 1.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .mascot-tip-text {
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .mascot-tip-text strong {
+      color: var(--indigo);
+      text-decoration: underline dotted var(--terracotta);
+    }
+
+    /* Boîte de lecture karaoké */
+    .karaoke-body {
+      padding: 20px 18px 16px;
+      background-color: #FFFDF9;
+    }
+
+    .karaoke-story-box {
+      font-family: var(--font-corps);
+      font-size: 22px;
+      line-height: 2.1;
+      color: var(--ink);
+      user-select: none;
+      min-height: 150px;
+    }
+
+    /* Mots individuels */
+    .karaoke-word {
+      display: inline-block;
+      padding: 1px 4px;
+      margin: 0 1px;
+      border-radius: 6px;
+      transition: all 0.12s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+      position: relative;
+    }
+    .karaoke-word:hover {
+      background-color: var(--millet);
+      border-color: var(--saffron);
+    }
+
+    /* Mot actif en cours de lecture */
+    .karaoke-word.active {
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-weight: 700;
+      border-color: var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+      transform: scale(1.08);
+      z-index: 2;
+    }
+
+    /* Mots déjà lus */
+    .karaoke-word.past {
+      color: var(--indigo);
+      font-weight: 600;
+    }
+
+    /* Bulle d'explication de Kolo au clic sur un mot */
+    .kolo-bubble {
+      display: none;
+      margin-top: 14px;
+      background-color: var(--millet);
+      border: 2px solid var(--terracotta);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+      animation: popIn 0.2s ease;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .kolo-bubble-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .kolo-bubble-word {
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--terracotta);
+    }
+    .kolo-syllables {
+      background: var(--white);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px dashed var(--terracotta);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    /* Contrôles du lecteur */
+    .karaoke-controls {
+      background-color: var(--cream);
+      border-top: 2px solid var(--millet-border);
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .karaoke-timeline-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .karaoke-progress-bar {
+      flex: 1;
+      height: 10px;
+      background-color: var(--millet);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1.5px solid var(--ink);
+      position: relative;
+    }
+    .karaoke-progress-fill {
+      width: 0%;
+      height: 100%;
+      background-color: var(--saffron);
+      transition: width 0.1s linear;
+    }
+    .karaoke-time {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      min-width: 44px;
+      text-align: right;
+    }
+
+    .karaoke-buttons-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .btn-karaoke-play {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0px var(--ink);
+      transition: transform 0.05s ease;
+    }
+    .btn-karaoke-play:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+    .btn-karaoke-play.playing {
+      background-color: var(--terracotta);
+      color: #FFFFFF;
+    }
+
+    .karaoke-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .speed-pill-btn {
+      background-color: var(--white);
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .speed-pill-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 0.5px 0.5px 0px var(--ink);
+    }
+
+    .btn-restart {
+      background-color: var(--white);
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+
+    /* ==========================================================================
+       SECTION 3 AVANTAGES : Entend / Voit / Comprend
+       ========================================================================== */
+    .section-avantages {
+      padding: 56px 0;
+      background-color: var(--white);
+      border-bottom: 2px solid var(--millet-border);
+    }
+
+    .section-header-center {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 40px;
+    }
+    .section-tag {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--indigo);
+      background-color: var(--millet);
+      border: 1px solid var(--indigo);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-titre);
+      font-size: clamp(26px, 5.5vw, 38px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--indigo);
+      margin-bottom: 12px;
+    }
+    .section-desc {
+      font-family: var(--font-corps);
+      font-size: 18px;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .avantages-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    @media (min-width: 768px) {
+      .avantages-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .card-avantage {
+      background-color: var(--cream);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      padding: 24px 20px;
+      box-shadow: 4px 4px 0px var(--ink);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .avantage-number {
+      position: absolute;
+      top: -12px;
+      right: 18px;
+      background-color: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-titre);
+      font-size: 14px;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 8px;
+      border: 1.5px solid var(--ink);
+    }
+    .avantage-icon-wrap {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+      margin-bottom: 18px;
+    }
+    .card-1 .avantage-icon-wrap {
+      background-color: var(--saffron);
+      color: var(--ink);
+    }
+    .card-2 .avantage-icon-wrap {
+      background-color: var(--indigo);
+      color: var(--cream);
+    }
+    .card-3 .avantage-icon-wrap {
+      background-color: var(--terracotta);
+      color: #FFFFFF;
+    }
+
+    .avantage-action {
+      font-family: var(--font-titre);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 8px;
+    }
+    .avantage-titre {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--terracotta);
+      margin-bottom: 10px;
+    }
+    .avantage-texte {
+      font-family: var(--font-corps);
+      font-size: 16.5px;
+      color: var(--ink);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .avantage-citation {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1.5px dashed var(--millet-border);
+      font-family: var(--font-corps);
+      font-size: 14.5px;
+      font-style: italic;
+      color: var(--leaf);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       SECTION HISTOIRES DU QUOTIDIEN OUEST-AFRICAIN
+       ========================================================================== */
+    .section-histoires {
+      padding: 56px 0;
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+    }
+
+    .histoires-intro-box {
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      padding: 20px;
+      margin-bottom: 32px;
+      box-shadow: 4px 4px 0px var(--ink);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    @media (min-width: 680px) {
+      .histoires-intro-box {
+        flex-direction: row;
+        align-items: center;
+        gap: 22px;
+      }
+    }
+    .teacher-badge-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--millet);
+      border: 2px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 28px;
+    }
+    .teacher-quote {
+      font-family: var(--font-corps);
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .teacher-quote strong {
+      color: var(--indigo);
+    }
+    .teacher-author {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--terracotta);
+      margin-top: 4px;
+    }
+
+    .histoires-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 640px) {
+      .histoires-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 990px) {
+      .histoires-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .story-card {
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      overflow: hidden;
+      box-shadow: 4px 4px 0px var(--ink);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.1s ease;
+    }
+    .story-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .story-card-top {
+      height: 110px;
+      padding: 14px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--ink);
+    }
+    .st-bg-1 { background-color: var(--millet); }
+    .st-bg-2 { background-color: #E2ECE1; }
+    .st-bg-3 { background-color: #F8E2D5; }
+
+    .story-card-badges {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .badge-class {
+      background-color: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      border: 1px solid var(--ink);
+    }
+    .badge-time {
+      background-color: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--ink);
+    }
+
+    .story-card-illustration {
+      font-size: 32px;
+      margin-top: 4px;
+    }
+
+    .story-card-content {
+      padding: 16px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .story-card-title {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .story-card-desc {
+      font-family: var(--font-corps);
+      font-size: 15.5px;
+      color: var(--ink);
+      line-height: 1.55;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+    .story-card-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .keyword-tag {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      background-color: var(--cream);
+      border: 1px solid var(--millet-border);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--ink);
+    }
+    .btn-read-story {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background-color: var(--millet);
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 9px;
+      border-radius: 8px;
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+    .btn-read-story:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+    .btn-read-story:hover {
+      background-color: var(--saffron);
+    }
+
+    /* ==========================================================================
+       SECTION TARIFS : 2 500 F CFA & Paiement Local (Wave / OM / MoMo)
+       ========================================================================== */
+    .section-tarifs {
+      padding: 56px 0;
+      background-color: var(--white);
+      border-bottom: 2px solid var(--millet-border);
+    }
+
+    .pricing-card {
+      max-width: 580px;
+      margin: 0 auto;
+      background-color: var(--cream);
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      box-shadow: 6px 6px 0px var(--ink);
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .pricing-pill-pop {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 16px;
+      border-radius: 20px;
+      border: 2px solid var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+      white-space: nowrap;
+    }
+
+    .pricing-title {
+      font-family: var(--font-titre);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+    .pricing-subtitle {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .pricing-figure {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .pricing-amount {
+      font-family: var(--font-titre);
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--indigo);
+    }
+    .pricing-currency {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--terracotta);
+    }
+    .pricing-period {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .pricing-comparison-pill {
+      display: inline-block;
+      background-color: var(--millet);
+      border: 1px solid var(--terracotta);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .pricing-features-list {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .pricing-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-family: var(--font-corps);
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .pricing-feature-check {
+      width: 22px;
+      height: 22px;
+      background-color: var(--leaf-light);
+      color: var(--leaf);
+      border: 1.5px solid var(--leaf);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Moyens de paiement mobile money Côte d'Ivoire */
+    .payment-methods-box {
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 22px;
+    }
+    .payment-title {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--indigo);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .payment-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .pay-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--ink);
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+    .pay-wave {
+      background-color: #1DC4FF;
+      color: #002244;
+    }
+    .pay-orange {
+      background-color: #FF7900;
+      color: #FFFFFF;
+    }
+    .pay-mtn {
+      background-color: #FFCC00;
+      color: #000000;
+    }
+    .pay-moov {
+      background-color: #005CA9;
+      color: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       SECTION FAQ PARENTS : Réponses simples et rassurantes
+       ========================================================================== */
+    .section-faq {
+      padding: 56px 0;
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+    }
+
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .faq-item {
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      box-shadow: 3px 3px 0px var(--ink);
+      overflow: hidden;
+      transition: background-color 0.1s ease;
+    }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 16px 18px;
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--indigo);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: none;
+    }
+    .faq-toggle-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: var(--millet);
+      border: 1.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .faq-item.open .faq-toggle-icon {
+      transform: rotate(45deg);
+      background-color: var(--terracotta);
+      color: #FFFFFF;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 18px 18px;
+      font-family: var(--font-corps);
+      font-size: 16.5px;
+      line-height: 1.65;
+      color: var(--ink);
+      border-top: 1.5px dashed var(--millet-border);
+      padding-top: 12px;
+    }
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+    .faq-answer strong {
+      color: var(--indigo);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       SECTION BANDEAU FINAL (Call to Action chaleureux)
+       ========================================================================== */
+    .cta-final-section {
+      padding: 56px 0;
+      background-color: var(--indigo);
+      color: var(--cream);
+      border-bottom: 2px solid var(--ink);
+      position: relative;
+    }
+    .cta-final-box {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cta-final-title {
+      font-family: var(--font-titre);
+      font-size: clamp(28px, 6vw, 42px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .cta-final-title span {
+      color: var(--saffron);
+    }
+    .cta-final-desc {
+      font-family: var(--font-corps);
+      font-size: 18px;
+      line-height: 1.6;
+      opacity: 0.95;
+      margin-bottom: 26px;
+      color: var(--cream);
+    }
+
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    .site-footer {
+      background-color: var(--cream);
+      padding: 36px 0 24px;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    @media (min-width: 600px) {
+      .footer-grid {
+        grid-template-columns: 1.5fr 1fr;
+      }
+    }
+    .footer-brand-title {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 6px;
+    }
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid var(--millet-border);
+      font-size: 12.5px;
+      color: var(--ink);
+      opacity: 0.8;
+    }
+
+    .wa-icon-svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    /* Badge hors-ligne */
+    .offline-notice {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--millet);
+      color: var(--ink);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--millet-border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- RÈGLE 5 : Motif vague signature en haut -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- 1. BANDEAU DE BIENVENUE CÔTE D'IVOIRE (RÈGLE 1 : fond #234B5E avec texte #F7EEDA) -->
+  <div class="top-banner">
+    <span class="top-banner-flag">🇨🇮</span>
+    <span>Conçu par des enseignants ivoiriens pour les élèves du <strong>CP1 au CM2</strong></span>
+    <span class="highlight">2 histoires offertes</span>
+  </div>
+
+  <!-- 2. EN-TÊTE / NAVIGATION -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand-logo" aria-label="Accueil Lis & Écoute">
+        <div class="logo-badge">
+          <!-- Icône livre & onde sonore stylisée -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F7EEDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M10 8h6"></path>
+            <path d="M10 12h4"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Lis <span>&</span> Écoute</div>
+          <div class="brand-subtitle">Le livre à l'oreille</div>
+        </div>
+      </a>
+
+      <nav class="header-nav" aria-label="Navigation principale">
+        <a href="#demo">Démo Karaoké</a>
+        <a href="#avantages">Comment ça marche</a>
+        <a href="#histoires">Les Histoires</a>
+        <a href="#tarifs">Tarif (2 500 F)</a>
+        <a href="#faq">Questions des Parents</a>
+      </nav>
+
+      <div class="header-cta">
+        <a href="https://wa.me/22500000000?text=Bonjour%2C%20je%20veux%20essayer%20Lis%20%26%20%C3%89coute%20pour%20mon%20enfant" target="_blank" rel="noopener" class="btn-header-wa" aria-label="Assistance WhatsApp">
+          <svg class="wa-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.584 1.961.949 3.018.949 3.182 0 5.768-2.586 5.769-5.767 0-3.181-2.587-5.766-5.77-5.766zm3.393 8.307c-.144.405-.837.774-1.17.824-.312.045-.694.072-2.128-.518-1.745-.718-2.846-2.483-2.932-2.599-.088-.116-.708-.942-.708-1.796 0-.855.449-1.277.608-1.45.16-.174.348-.217.464-.217.116 0 .232.001.333.006.107.005.249-.041.39.299.144.348.491 1.199.534 1.286.043.087.072.188.014.303-.058.116-.087.188-.174.289-.087.101-.184.227-.262.304-.089.088-.182.184-.078.362.104.179.463.764.994 1.237.684.61 1.261.8 1.44.887.179.087.284.073.39-.049.106-.122.454-.528.575-.709.121-.181.243-.152.408-.09.166.062 1.053.497 1.234.588.181.091.303.136.348.212.044.077.044.444-.1 849z"/>
+          </svg>
+          <span>WhatsApp</span>
+        </a>
+        <a href="#demo" class="btn-header-test">
+          <span>Essayer la démo</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. HERO SECTION + DÉMO KARAOKÉ -->
+  <main>
+    <section class="hero-section" id="demo">
+      <div class="container hero-grid">
+        
+        <!-- Colonne Gauche : Discours aux parents -->
+        <div class="hero-content">
+          <!-- RÈGLE 2 : Badge "MÉTHODE BIMODALE" : bord #234B5E, fond #ECD9B4, point #C1652B -->
+          <div class="hero-pill">
+            <span class="hero-pill-dot"></span>
+            <span>Méthode Bimodale • CP1 à CM2</span>
+          </div>
+
+          <!-- RÈGLE 3 : Titre principal : #2B2018, mot "lecture karaoké" en #C1652B -->
+          <h1 class="hero-title">
+            Votre enfant bute sur les mots ? Donnez-lui le déclic avec la <span class="accent-orange">lecture karaoké</span>.
+          </h1>
+
+          <!-- RÈGLE 4 : Le paragraphe reste #2B2018 -->
+          <p class="hero-lead">
+            Pendant qu’une voix douce lit l’histoire, <strong>chaque mot s'allume en jaune mangue au moment précis où il est prononcé</strong>. L’élève regarde, écoute, et comprend enfin les sons sans honte ni blocage.
+          </p>
+
+          <div class="hero-actions">
+            <!-- Bouton principal CTA : #E8A23B (saffron) avec texte #2B2018 -->
+            <a href="#demo-karaoke-box" class="btn-main" id="btn-hero-test">
+              <!-- Icône Play -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <span>Tester la démo ci-contre</span>
+            </a>
+            <a href="#tarifs" class="btn-secondary">
+              <span>Voir le tarif (2 500 F)</span>
+            </a>
+          </div>
+
+          <div class="hero-guarantees">
+            <div class="guarantee-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Fonctionne sur petit smartphone Android</span>
+            </div>
+            <div class="guarantee-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Consomme moins de 1 Mo par histoire</span>
+            </div>
+            <div class="guarantee-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>100% récits du quotidien ivoirien</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colonne Droite : Lecteur Karaoké Fonctionnel -->
+        <div class="hero-interactive" id="demo-karaoke-box">
+          <div class="karaoke-card">
+            
+            <div class="karaoke-header">
+              <div class="karaoke-meta">
+                <span class="story-level-badge">Niveau CE1</span>
+                <span class="story-title-preview">Koffi et le car d’Adjamé</span>
+              </div>
+              <div class="network-badge">
+                <span>📶 3G OK • 0.4 Mo</span>
+              </div>
+            </div>
+
+            <!-- Mascotte Kolo : Guide pour l'enfant et le parent -->
+            <div class="mascot-strip">
+              <div class="mascot-avatar" title="Kolo le caméléon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F7EEDA" stroke-width="2">
+                  <circle cx="12" cy="12" r="9"/>
+                  <circle cx="9" cy="10" r="1.5" fill="#F7EEDA"/>
+                  <path d="M15 13c-.5 1.5-2 2-3 2s-2.5-.5-3-2"/>
+                  <path d="M17 9c.5-1 1.5-1.5 2.5-1"/>
+                </svg>
+              </div>
+              <div class="mascot-tip-text">
+                <strong>Kolo le caméléon :</strong> « Appuie sur <strong>Lecture</strong> ou touche un mot pour que je te l’explique ! »
+              </div>
+            </div>
+
+            <!-- Texte karaoké interactif -->
+            <div class="karaoke-body">
+              <div class="karaoke-story-box" id="story-container">
+                <span class="karaoke-word" data-index="0" data-syllables="Ce">Ce</span>
+                <span class="karaoke-word" data-index="1" data-syllables="ma-tin">matin,</span>
+                <span class="karaoke-word" data-index="2" data-syllables="Kof-fi">Koffi</span>
+                <span class="karaoke-word" data-index="3" data-syllables="court">court</span>
+                <span class="karaoke-word" data-index="4" data-syllables="sous">sous</span>
+                <span class="karaoke-word" data-index="5" data-syllables="les">les</span>
+                <span class="karaoke-word" data-index="6" data-syllables="man-guiers">manguiers</span>
+                <span class="karaoke-word" data-index="7" data-syllables="de">de</span>
+                <span class="karaoke-word" data-index="8" data-syllables="Yo-pou-gon.">Yopougon.</span>
+                <span class="karaoke-word" data-index="9" data-syllables="Il">Il</span>
+                <span class="karaoke-word" data-index="10" data-syllables="ne">ne</span>
+                <span class="karaoke-word" data-index="11" data-syllables="veut">veut</span>
+                <span class="karaoke-word" data-index="12" data-syllables="pas">pas</span>
+                <span class="karaoke-word" data-index="13" data-syllables="ra-ter">rater</span>
+                <span class="karaoke-word" data-index="14" data-syllables="le">le</span>
+                <span class="karaoke-word" data-index="15" data-syllables="car">car</span>
+                <span class="karaoke-word" data-index="16" data-syllables="d'Ad-ja-mé.">d'Adjamé.</span>
+                <span class="karaoke-word" data-index="17" data-syllables="Dans">Dans</span>
+                <span class="karaoke-word" data-index="18" data-syllables="sa">sa</span>
+                <span class="karaoke-word" data-index="19" data-syllables="main,">main,</span>
+                <span class="karaoke-word" data-index="20" data-syllables="il">il</span>
+                <span class="karaoke-word" data-index="21" data-syllables="tient">tient</span>
+                <span class="karaoke-word" data-index="22" data-syllables="son">son</span>
+                <span class="karaoke-word" data-index="23" data-syllables="ar-doise">ardoise</span>
+                <span class="karaoke-word" data-index="24" data-syllables="pro-pre.">propre.</span>
+              </div>
+
+              <!-- Bulle explicative dynamique de Kolo -->
+              <div class="kolo-bubble" id="kolo-bubble">
+                <div class="kolo-bubble-content">
+                  <div>
+                    <span class="kolo-bubble-word" id="kolo-word-name">manguiers</span>
+                    <span style="font-size: 12px; color: var(--ink); margin-left: 6px;">se lit :</span>
+                  </div>
+                  <div class="kolo-syllables" id="kolo-syllables-text">man — guiers</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contrôles du Lecteur Karaoké -->
+            <div class="karaoke-controls">
+              <div class="karaoke-timeline-wrap">
+                <div class="karaoke-progress-bar">
+                  <div class="karaoke-progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="karaoke-time" id="karaoke-time-display">0:00 / 0:15</div>
+              </div>
+
+              <div class="karaoke-buttons-row">
+                <button class="btn-karaoke-play" id="btn-play-karaoke" aria-label="Lancer la lecture">
+                  <svg id="play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                  <span id="play-btn-text">Écouter l'histoire</span>
+                </button>
+
+                <div class="karaoke-tools">
+                  <button class="speed-pill-btn" id="btn-toggle-speed" title="Changer la vitesse pour les enfants qui débutent">
+                    <span style="font-size: 10px;">⚡</span>
+                    <span id="speed-label">Vitesse : 0.8x (Lente)</span>
+                  </button>
+                  <button class="btn-restart" id="btn-restart-karaoke" title="Recommencer du début" aria-label="Recommencer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M1 4v6h6"></path>
+                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. SECTION 3 AVANTAGES : ENTEND / VOIT / COMPREND -->
+    <section class="section-avantages" id="avantages">
+      <div class="container">
+        
+        <div class="section-header-center">
+          <span class="section-tag">La Méthode Pédagogique</span>
+          <h2 class="section-title">Pourquoi le karaoké débloque la lecture chez l'enfant</h2>
+          <p class="section-desc">
+            Quand un enfant bloque sur un livre ordinaire, c'est parce que son cerveau doit tout deviner à la fois. Avec Lis & Écoute, ses 3 sens travaillent ensemble.
+          </p>
+        </div>
+
+        <div class="avantages-grid">
+          
+          <!-- Carte 1 : IL ENTEND -->
+          <div class="card-avantage card-1">
+            <span class="avantage-number">Étape 1</span>
+            <div class="avantage-icon-wrap">
+              <!-- Oreille attentive -->
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10"></path>
+                <path d="M14 8.5a2.5 2.5 0 0 0-5 0v2"></path>
+              </svg>
+            </div>
+            <div class="avantage-action">1. Il Entend</div>
+            <div class="avantage-titre">La voix calme d'un maître d'école</div>
+            <p class="avantage-texte">
+              Pas de robot froid. Une voix humaine chaleureuse prononce chaque son distinctement, sans précipitation. L'enfant entend exactement comment le son <em>« ou »</em>, <em>« gn »</em> ou <em>« in »</em> se chante.
+            </p>
+            <div class="avantage-citation">
+              « Fini la peur de se faire disputer parce qu’on n’arrive pas à prononcer. »
+            </div>
+          </div>
+
+          <!-- Carte 2 : IL VOIT -->
+          <div class="card-avantage card-2">
+            <span class="avantage-number">Étape 2</span>
+            <div class="avantage-icon-wrap">
+              <!-- Œil qui suit le mot -->
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </div>
+            <div class="avantage-action">2. Il Voit</div>
+            <div class="avantage-titre">Le surlignage mot à mot en temps réel</div>
+            <p class="avantage-texte">
+              Au millième de seconde où la voix prononce le mot, celui-ci s'allume en jaune mangue. L'œil fait le pont direct entre les lettres écrites et le son prononcé. Les lettres muettes ne le piègent plus.
+            </p>
+            <div class="avantage-citation">
+              « Comme dans un karaoké : l'enfant suit avec ses yeux sans jamais perdre la ligne. »
+            </div>
+          </div>
+
+          <!-- Carte 3 : IL COMPREND -->
+          <div class="card-avantage card-3">
+            <span class="avantage-number">Étape 3</span>
+            <div class="avantage-icon-wrap">
+              <!-- Cerveau & Compréhension -->
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                <circle cx="12" cy="12" r="4"></circle>
+              </svg>
+            </div>
+            <div class="avantage-action">3. Il Comprend</div>
+            <div class="avantage-titre">Des histoires de son vrai quotidien</div>
+            <p class="avantage-texte">
+              Pas de château médiéval ou de neige qu'il n'a jamais vue. Les récits parlent du marché, du gbaka, de la pluie d'hivernage, de ses camarades de classe. Il comprend le sens, et prend plaisir à lire.
+            </p>
+            <div class="avantage-citation">
+              « L'enfant ne déchiffre plus par contrainte : il lit parce que c'est son monde. »
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. SECTION HISTOIRES DU QUOTIDIEN OUEST-AFRICAIN -->
+    <section class="section-histoires" id="histoires">
+      <div class="container">
+        
+        <div class="section-header-center">
+          <span class="section-tag">Ancrage Culturel & Programme Scolaire</span>
+          <h2 class="section-title">Des récits écrits par des instituteurs d’ici</h2>
+          <p class="section-desc">
+            Pour donner le goût de lire à un enfant du primaire, il faut qu’il se reconnaisse dans les personnages. Fini les histoires déconnectées de sa réalité.
+          </p>
+        </div>
+
+        <!-- Encadré parole d'enseignant -->
+        <div class="histoires-intro-box">
+          <div class="teacher-badge-img">👨🏾‍🏫</div>
+          <div>
+            <div class="teacher-quote">
+              « En classe au CP et CE1, un enfant qui ne comprend pas le décor d’une histoire abandonne au bout de trois lignes. Quand je lui parle du marché d’Adjamé ou du ballon sous le manguier, <strong>son regard s’allume tout de suite</strong>. »
+            </div>
+            <div class="teacher-author">
+              — Maître Yao, instituteur à Yopougon & auteur des récits Lis & Écoute
+            </div>
+          </div>
+        </div>
+
+        <!-- Grille des histoires types -->
+        <div class="histoires-grid">
+          
+          <!-- Histoire 1 -->
+          <div class="story-card">
+            <div class="story-card-top st-bg-1">
+              <div class="story-card-badges">
+                <span class="badge-class">CP1 — CP2</span>
+                <span class="badge-time">⏱️ 1 min 20 s</span>
+              </div>
+              <div class="story-card-illustration">🥭</div>
+            </div>
+            <div class="story-card-content">
+              <h3 class="story-card-title">Awa et le panier de mangues</h3>
+              <p class="story-card-desc">
+                Au retour du marché avec grand-mère, le panier est lourd. Awa apprend à compter les mangues mûres tout en évitant les flaques d'eau tiède.
+              </p>
+              <div class="story-card-keywords">
+                <span class="keyword-tag">Sons doux (m, n, p)</span>
+                <span class="keyword-tag">Mots simples</span>
+                <span class="keyword-tag">Phrases courtes</span>
+              </div>
+              <button class="btn-read-story" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">
+                <span>Écouter un extrait</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Histoire 2 -->
+          <div class="story-card">
+            <div class="story-card-top st-bg-2">
+              <div class="story-card-badges">
+                <span class="badge-class">CE1 — CE2</span>
+                <span class="badge-time">⏱️ 2 min 10 s</span>
+              </div>
+              <div class="story-card-illustration">🚌</div>
+            </div>
+            <div class="story-card-content">
+              <h3 class="story-card-title">Le matin pressé de Koffi</h3>
+              <p class="story-card-desc">
+                Le car gbaka klaxonne au carrefour. Koffi vérifie son sac d'école, son ardoise et ses souliers pour ne pas être en retard au rassemblement.
+              </p>
+              <div class="story-card-keywords">
+                <span class="keyword-tag">Vocabulaire usuel</span>
+                <span class="keyword-tag">Verbes d'action</span>
+                <span class="keyword-tag">Vie de quartier</span>
+              </div>
+              <button class="btn-read-story" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">
+                <span>Écouter un extrait</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Histoire 3 -->
+          <div class="story-card">
+            <div class="story-card-top st-bg-3">
+              <div class="story-card-badges">
+                <span class="badge-class">CM1 — CM2</span>
+                <span class="badge-time">⏱️ 3 min 00 s</span>
+              </div>
+              <div class="story-card-illustration">🌳</div>
+            </div>
+            <div class="story-card-content">
+              <h3 class="story-card-title">Le secret du grand baobab</h3>
+              <p class="story-card-desc">
+                Pendant les vacances au village à Man, les anciens racontent pourquoi les oiseaux se rassemblent toujours sur la même branche au crépuscule.
+              </p>
+              <div class="story-card-keywords">
+                <span class="keyword-tag">Questions de quiz</span>
+                <span class="keyword-tag">Compréhension fine</span>
+                <span class="keyword-tag">Culture locale</span>
+              </div>
+              <button class="btn-read-story" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">
+                <span>Écouter un extrait</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. SECTION TARIF : 2 500 F CFA & PAIEMENT MOBILE MONEY -->
+    <section class="section-tarifs" id="tarifs">
+      <div class="container">
+        
+        <div class="section-header-center">
+          <span class="section-tag">Abonnement Familial Simple</span>
+          <h2 class="section-title">Un tarif clair, sans engagement</h2>
+          <p class="section-desc">
+            L'éducation de votre enfant ne doit pas dépendre d'une carte bancaire compliquée. Payez simplement par Mobile Money comme vous payez votre électricité ou votre marché.
+          </p>
+        </div>
+
+        <div class="pricing-card">
+          <span class="pricing-pill-pop">Le Choix des Parents</span>
+          
+          <h3 class="pricing-title">Abonnement Mensuel Illimité</h3>
+          <p class="pricing-subtitle">Accès complet pour tous les enfants du foyer</p>
+
+          <div class="pricing-figure">
+            <span class="pricing-amount">2 500</span>
+            <span class="pricing-currency">F CFA</span>
+            <span class="pricing-period">/ mois</span>
+          </div>
+
+          <div class="pricing-comparison-pill">
+            Soit moins de <strong>85 F CFA par jour</strong> — Moins cher que deux beignets au goûter !
+          </div>
+
+          <ul class="pricing-features-list">
+            <li class="pricing-feature">
+              <span class="pricing-feature-check">✓</span>
+              <span><strong>Toutes les histoires débloquées</strong> (du CP1 au CM2, mises à jour chaque semaine).</span>
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-check">✓</span>
+              <span><strong>Lecture karaoké illimitée</strong> avec la voix audio du maître et le surlignage mot à mot.</span>
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-check">✓</span>
+              <span><strong>Explications de mots par Kolo</strong> d’un simple toucher de doigt.</span>
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-check">✓</span>
+              <span><strong>Quiz de compréhension interactif</strong> après chaque récit pour vérifier les acquis.</span>
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-check">✓</span>
+              <span><strong>Zéro publicité</strong> : l'enfant reste 100% concentré sur sa lecture.</span>
+            </li>
+          </ul>
+
+          <!-- Badges de paiement Wave / OM / MTN / Moov -->
+          <div class="payment-methods-box">
+            <div class="payment-title">Paiement 100% sécurisé par Mobile Money :</div>
+            <div class="payment-badges">
+              <span class="pay-badge pay-wave">🌊 Wave (0% frais)</span>
+              <span class="pay-badge pay-orange">🟠 Orange Money</span>
+              <span class="pay-badge pay-mtn">🟡 MTN MoMo</span>
+              <span class="pay-badge pay-moov">🔵 Moov Money</span>
+            </div>
+          </div>
+
+          <a href="https://wa.me/22500000000?text=Bonjour%2C%20je%20souhaite%20activer%20l%27abonnement%20%C3%A0%202500%20F%20CFA%20par%20Wave%2FMobile%20Money" target="_blank" rel="noopener" class="btn-main" style="width: 100%;">
+            <span>Activer l'accès par Mobile Money</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          
+          <div style="margin-top: 14px; font-size: 13px; color: var(--ink);">
+            Activation immédiate sur votre numéro de téléphone • Sans engagement, résiliable à tout moment.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. SECTION FAQ PARENTS : En français simple ivoirien -->
+    <section class="section-faq" id="faq">
+      <div class="container">
+        
+        <div class="section-header-center">
+          <span class="section-tag">Foire Aux Questions</span>
+          <h2 class="section-title">Les réponses aux questions des parents</h2>
+          <p class="section-desc">
+            Tout est pensé pour être simple, direct et sans casse-tête technique.
+          </p>
+        </div>
+
+        <div class="faq-list">
+          
+          <!-- Question 1 -->
+          <div class="faq-item open">
+            <button class="faq-question" type="button">
+              <span>Mon téléphone est un petit Android modeste. Est-ce que ça va marcher ?</span>
+              <span class="faq-toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <strong>Oui, absolument !</strong> Lis & Écoute a été spécialement programmé pour fonctionner sur les téléphones d’entrée de gamme (Tecno, Itel, Infinix, Samsung A03, etc.). Pas besoin d’installer une lourde application qui remplit la mémoire : le site s’ouvre directement dans Chrome ou votre navigateur habituel en 2 secondes.
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Est-ce que ça va couper tout mon pass internet ?</span>
+              <span class="faq-toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <strong>Pas du tout.</strong> Chaque histoire avec son audio et ses animations pèse moins de <strong>1 Mo</strong>. C’est dix fois plus léger qu’une seule vidéo TikTok ou un statut WhatsApp. Avec un petit pass de 200 F, votre enfant peut lire des dizaines d’histoires pendant tout le mois.
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Mon enfant est au CE1 mais il hésite encore sur chaque mot. Est-ce adapté ?</span>
+              <span class="faq-toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <strong>C’est exactement pour lui qu’on a créé l'outil.</strong> Les enfants qui ont des difficultés au CP2 ou CE1 se découragent vite quand on les force à lire seuls. Avec le surlignage karaoké et la vitesse réglable à 0.8x, la voix porte l'enfant. Il n'a plus honte de buter : il écoute, répète, et gagne confiance jour après jour.
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Comment se passe le paiement des 2 500 F si je n'ai pas de carte bancaire ?</span>
+              <span class="faq-toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <strong>Aucune carte bancaire n'est nécessaire.</strong> Vous réglez directement via votre compte <strong>Wave, Orange Money, MTN MoMo ou Moov Money</strong>. Dès que le transfert est validé, votre accès est activé sur le champ et vous recevez votre confirmation sur WhatsApp.
+            </div>
+          </div>
+
+          <!-- Question 5 -->
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Et si je n'ai pas le temps de m'asseoir avec lui le soir ?</span>
+              <span class="faq-toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              L'application est conçue pour être <strong>totalement autonome pour l'enfant</strong>. Les boutons sont grands et parlants. Kolo le caméléon donne les consignes à la voix. Votre enfant peut lancer son histoire tout seul pendant que vous préparez le repas ou que vous vous reposez après le travail.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 8. BANDEAU D'APPEL FINAL CHALEUREUX -->
+    <section class="cta-final-section">
+      <div class="container cta-final-box">
+        <h2 class="cta-final-title">
+          Ce soir, voyez votre enfant lire sa première phrase <span>avec le sourire</span>.
+        </h2>
+        <p class="cta-final-desc">
+          Ne laissez pas les difficultés de lecture s'installer avant le passage en classe supérieure. Deux histoires sont prêtes à être lues gratuitement.
+        </p>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+          <a href="#demo" class="btn-main" style="font-size: 19px; padding: 16px 28px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <span>Faire lire mon enfant maintenant (Gratuit)</span>
+          </a>
+
+          <a href="https://wa.me/22500000000?text=Bonjour%20Ma%C3%AEtre%2C%20j%27ai%20une%20question%20sur%20Lis%20%26%20%C3%89coute" target="_blank" rel="noopener" style="color: var(--cream); font-family: var(--font-ui); font-weight: 600; font-size: 14px; text-decoration: underline; display: inline-flex; align-items: center; gap: 6px;">
+            <span>Ou discuter directement avec l'équipe sur WhatsApp (+225)</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- RÈGLE 5 : Motif vague signature en bas avant le footer -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none" style="transform:scaleY(-1)">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#5B8C51" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- 9. PIED DE PAGE -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-title">Lis & Écoute</div>
+          <p style="max-width: 440px; margin-bottom: 12px; line-height: 1.6; font-family: var(--font-corps); font-size: 16px;">
+            La première plateforme d’apprentissage de la lecture bimodal par karaoké conçue pour les écoliers de Côte d'Ivoire et d'Afrique de l'Ouest.
+          </p>
+          <div class="offline-notice">
+            <span>⚡ Optimisé basse consommation de données (Mo)</span>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight: 700; color: var(--indigo); margin-bottom: 10px;">Contact Pédagogique</div>
+          <p style="margin-bottom: 6px;">📍 Abidjan, Côte d'Ivoire</p>
+          <p style="margin-bottom: 6px;">💬 WhatsApp : +225 07 00 00 00 00</p>
+          <p style="margin-bottom: 6px;">✉️ contact@lisez-ecoutez.ci</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2026 Lis & Écoute — Le livre à l'oreille, le mot à la bouche. Fièrement pensé pour la réussite de nos enfants.
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ==========================================================================
+       LOGIQUE JAVASCRIPT ULTRA-LÉGÈRE (Zéro dépendance, haute performance)
+       - Moteur karaoké synchrone avec Web Speech API & horloge précise
+       - Clic mot avec découpage syllabique de Kolo
+       - Accordéon FAQ interactif
+       ========================================================================== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // --- Données des mots avec timings (en secondes) pour la démo ---
+      const wordsData = [
+        { word: "Ce", start: 0.0, end: 0.45, syl: "Ce", def: "Désigne le moment présent" },
+        { word: "matin,", start: 0.45, end: 1.05, syl: "ma — tin", def: "Le début du jour" },
+        { word: "Koffi", start: 1.05, end: 1.70, syl: "Kof — fi", def: "Prénom traditionnel akan" },
+        { word: "court", start: 1.70, end: 2.30, syl: "court", def: "Se déplacer vite avec ses jambes" },
+        { word: "sous", start: 2.30, end: 2.75, syl: "sous", def: "En dessous de quelque chose" },
+        { word: "les", start: 2.75, end: 3.10, syl: "les", def: "Article pour plusieurs choses" },
+        { word: "manguiers", start: 3.10, end: 3.95, syl: "man — guiers", def: "Le grand arbre qui donne les mangues" },
+        { word: "de", start: 3.95, end: 4.30, syl: "de", def: "Indique la provenance" },
+        { word: "Yopougon.", start: 4.30, end: 5.25, syl: "Yo — pou — gon", def: "La plus grande commune d'Abidjan" },
+        { word: "Il", start: 5.35, end: 5.70, syl: "Il", def: "Désigne Koffi" },
+        { word: "ne", start: 5.70, end: 6.00, syl: "ne", def: "Sert à dire non ou empêcher" },
+        { word: "veut", start: 6.00, end: 6.45, syl: "veut", def: "Avoir envie de faire" },
+        { word: "pas", start: 6.45, end: 6.85, syl: "pas", def: "Complète la négation" },
+        { word: "rater", start: 6.85, end: 7.50, syl: "ra — ter", def: "Manquer son transport" },
+        { word: "le", start: 7.50, end: 7.85, syl: "le", def: "Article masculin singulier" },
+        { word: "car", start: 7.85, end: 8.45, syl: "car", def: "Le gbaka ou mini-car de transport" },
+        { word: "d'Adjamé.", start: 8.45, end: 9.40, syl: "d'Ad — ja — mé", def: "Le quartier commerçant d'Abidjan" },
+        { word: "Dans", start: 9.50, end: 9.95, syl: "Dans", def: "À l'intérieur de" },
+        { word: "sa", start: 9.95, end: 10.35, syl: "sa", def: "Ce qui lui appartient" },
+        { word: "main,", start: 10.35, end: 10.95, syl: "main", def: "Le bout du bras pour attraper" },
+        { word: "il", start: 10.95, end: 11.35, syl: "il", def: "Désigne Koffi" },
+        { word: "tient", start: 11.35, end: 11.85, syl: "tient", def: "Serrer fort entre ses doigts" },
+        { word: "son", start: 11.85, end: 12.25, syl: "son", def: "Possessif" },
+        { word: "ardoise", start: 12.25, end: 13.05, syl: "ar — doi — se", def: "La planchette noire pour écrire les leçons" },
+        { word: "propre.", start: 13.05, end: 14.10, syl: "pro — pre", def: "Bien essuyée, sans taches de craie" }
+      ];
+
+      const TOTAL_DURATION = 14.10; // secondes de l'histoire
+
+      // Éléments du DOM
+      const storyContainer = document.getElementById('story-container');
+      const wordElements = storyContainer.querySelectorAll('.karaoke-word');
+      const btnPlay = document.getElementById('btn-play-karaoke');
+      const playIcon = document.getElementById('play-icon');
+      const playText = document.getElementById('play-btn-text');
+      const progressFill = document.getElementById('progress-fill');
+      const timeDisplay = document.getElementById('karaoke-time-display');
+      const btnToggleSpeed = document.getElementById('btn-toggle-speed');
+      const speedLabel = document.getElementById('speed-label');
+      const btnRestart = document.getElementById('btn-restart-karaoke');
+      const koloBubble = document.getElementById('kolo-bubble');
+      const koloWordName = document.getElementById('kolo-word-name');
+      const koloSyllablesText = document.getElementById('kolo-syllables-text');
+
+      // État du lecteur
+      let isPlaying = false;
+      let currentTime = 0;
+      let currentWordIndex = -1;
+      let playbackRate = 0.8; // Vitesse calme pour écolier
+      let animationFrameId = null;
+      let lastTimestamp = null;
+      let synthUtterance = null;
+      const hasSpeechSynth = 'speechSynthesis' in window;
+
+      // Formatage du temps 00:00
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+
+      // Mise à jour de l'affichage du surlignage
+      function updateHighlights(time) {
+        let activeIdx = -1;
+
+        for (let i = 0; i < wordsData.length; i++) {
+          const item = wordsData[i];
+          if (time >= item.start && time <= item.end) {
+            activeIdx = i;
+            break;
+          }
+        }
+
+        if (activeIdx !== currentWordIndex) {
+          currentWordIndex = activeIdx;
+          wordElements.forEach((el, idx) => {
+            if (idx === currentWordIndex) {
+              el.classList.add('active');
+              el.classList.remove('past');
+            } else if (idx < currentWordIndex) {
+              el.classList.remove('active');
+              el.classList.add('past');
+            } else {
+              el.classList.remove('active');
+              el.classList.remove('past');
+            }
+          });
+        }
+
+        // Barre de progression
+        const percent = Math.min(100, (time / TOTAL_DURATION) * 100);
+        progressFill.style.width = percent + '%';
+        timeDisplay.textContent = `${formatTime(time)} / ${formatTime(TOTAL_DURATION)}`;
+      }
+
+      // Boucle d'animation fluide
+      function tick(timestamp) {
+        if (!lastTimestamp) lastTimestamp = timestamp;
+        const delta = (timestamp - lastTimestamp) / 1000;
+        lastTimestamp = timestamp;
+
+        currentTime += delta * playbackRate;
+
+        if (currentTime >= TOTAL_DURATION) {
+          stopPlayback();
+          currentTime = TOTAL_DURATION;
+          updateHighlights(currentTime);
+          return;
+        }
+
+        updateHighlights(currentTime);
+
+        if (isPlaying) {
+          animationFrameId = requestAnimationFrame(tick);
+        }
+      }
+
+      // Synthèse vocale facultative pour le naturel (si supportée sur l'appareil)
+      function startSpeechNarrator() {
+        if (!hasSpeechSynth) return;
+        try {
+          window.speechSynthesis.cancel();
+          const fullText = "Ce matin, Koffi court sous les manguiers de Yopougon. Il ne veut pas rater le car d'Adjamé. Dans sa main, il tient son ardoise propre.";
+          synthUtterance = new SpeechSynthesisUtterance(fullText);
+          synthUtterance.lang = 'fr-FR';
+          synthUtterance.rate = playbackRate;
+          synthUtterance.pitch = 1.05;
+          window.speechSynthesis.speak(synthUtterance);
+        } catch (e) {}
+      }
+
+      function stopSpeechNarrator() {
+        if (hasSpeechSynth) {
+          try {
+            window.speechSynthesis.cancel();
+          } catch (e) {}
+        }
+      }
+
+      // Démarrer la lecture
+      function startPlayback() {
+        if (currentTime >= TOTAL_DURATION) {
+          currentTime = 0;
+        }
+        isPlaying = true;
+        btnPlay.classList.add('playing');
+        playText.textContent = "Mettre en pause";
+        playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+        lastTimestamp = null;
+        startSpeechNarrator();
+        animationFrameId = requestAnimationFrame(tick);
+      }
+
+      // Mettre en pause
+      function stopPlayback() {
+        isPlaying = false;
+        btnPlay.classList.remove('playing');
+        playText.textContent = "Reprendre la lecture";
+        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        stopSpeechNarrator();
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+
+      // Recommencer
+      function resetPlayback() {
+        stopPlayback();
+        currentTime = 0;
+        currentWordIndex = -1;
+        updateHighlights(0);
+        playText.textContent = "Écouter l'histoire";
+      }
+
+      // Événement clic bouton Play/Pause
+      btnPlay.addEventListener('click', function() {
+        if (isPlaying) {
+          stopPlayback();
+        } else {
+          startPlayback();
+        }
+      });
+
+      btnRestart.addEventListener('click', resetPlayback);
+
+      // Bascule de la vitesse (0.8x -> 1.0x -> 0.8x)
+      btnToggleSpeed.addEventListener('click', function() {
+        if (playbackRate === 0.8) {
+          playbackRate = 1.0;
+          speedLabel.textContent = "Vitesse : 1.0x (Normale)";
+        } else {
+          playbackRate = 0.8;
+          speedLabel.textContent = "Vitesse : 0.8x (Lente)";
+        }
+        if (isPlaying) {
+          stopSpeechNarrator();
+          startSpeechNarrator();
+        }
+      });
+
+      // Clic interactif sur un mot spécifique (Pédagogie de Kolo)
+      wordElements.forEach((el, index) => {
+        el.addEventListener('click', function() {
+          const item = wordsData[index];
+          if (!item) return;
+
+          // Met en pause la lecture générale
+          stopPlayback();
+
+          // Caler le temps sur ce mot
+          currentTime = item.start;
+          updateHighlights(currentTime);
+
+          // Afficher l'explication de Kolo
+          koloWordName.textContent = item.word.replace(/[.,]/g, '');
+          koloSyllablesText.textContent = item.syl;
+          koloBubble.style.display = 'block';
+
+          // Prononcer le mot isolé si synthèse vocale dispo
+          if (hasSpeechSynth) {
+            try {
+              window.speechSynthesis.cancel();
+              const wordUtt = new SpeechSynthesisUtterance(item.word.replace(/[.,]/g, ''));
+              wordUtt.lang = 'fr-FR';
+              wordUtt.rate = 0.75;
+              window.speechSynthesis.speak(wordUtt);
+            } catch(e) {}
+          }
+        });
+      });
+
+      // --- Accordéon FAQ Simple ---
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        questionBtn.addEventListener('click', () => {
+          const isOpen = item.classList.contains('open');
+          faqItems.forEach(i => i.classList.remove('open'));
+          if (!isOpen) {
+            item.classList.add('open');
+          }
+        });
+      });
+
+      // Initialisation initiale
+      updateHighlights(0);
+
+    })();
+  </script>
+</body>
+</html>
