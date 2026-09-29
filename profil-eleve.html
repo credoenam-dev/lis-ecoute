@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mon Profil — Lis & Écoute</title>
+  <meta name="description" content="Espace profil élève de Lis & Écoute — Voir ses récits lus, son score moyen, ses badges et choisir son avatar animal.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE
+       ========================================================================== */
+    :root {
+      --cream:          #F7EFDA;
+      --millet:         #ECD9B4;
+      --millet-light:   #FBF6EB;
+      --millet-border:  #D8C296;
+      --white:          #FFFFFF;
+      --ink:            #2B2018;
+      --indigo:         #234B5E;
+      --terracotta:     #C1652B;
+      --saffron:        #E8A23B;
+      --saffron-light:  #FEF4E2;
+      --leaf:           #5B8C51;
+      --leaf-light:     #EBF3EA;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui:    'Work Sans', sans-serif;
+
+      --rayon-carte:   18px;
+      --rayon-bouton:  14px;
+      --rayon-pilule:  30px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .wave-svg { display: block; width: 100%; height: 24px; background: var(--cream); }
+
+    /* ── HEADER ─────────────────────────────────────────────────── */
+    .profile-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .btn-back-dash {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      box-shadow: 2px 2px 0 var(--ink);
+      text-decoration: none;
+      transition: transform .08s, box-shadow .08s;
+    }
+    .btn-back-dash:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+
+    .brand-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .brand-mini-badge {
+      width: 36px; height: 36px;
+      background: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 1.5px 1.5px 0 var(--ink);
+    }
+    .brand-mini-title {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .brand-mini-title span { color: var(--terracotta); }
+
+    /* ── HERO CARTE PROFIL ─────────────────────────────────────── */
+    .profile-hero-card {
+      background: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 5px 5px 0 var(--ink);
+      padding: 28px 20px 24px;
+      margin: 18px 0 16px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Grand avatar sélectionné */
+    .avatar-display-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+    .avatar-circle {
+      width: 100px;
+      height: 100px;
+      background: var(--millet);
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      box-shadow: 4px 4px 0 var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 54px;
+      cursor: pointer;
+      transition: transform .12s;
+    }
+    .avatar-circle:hover { transform: scale(1.05); }
+
+    /* Petit badge de modification */
+    .avatar-edit-badge {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--saffron);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 1.5px 1.5px 0 var(--ink);
+      cursor: pointer;
+    }
+
+    .profile-name {
+      font-family: var(--font-titre);
+      font-size: clamp(26px, 5.5vw, 32px);
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.1;
+    }
+    .profile-class-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .profile-class-pill {
+      background: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--ink);
+    }
+    .profile-age-pill {
+      background: var(--saffron-light);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--ink);
+    }
+
+    /* Bouton modifier avatar */
+    .btn-change-avatar {
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 9px 20px;
+      font-family: var(--font-titre);
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2.5px 2.5px 0 var(--ink);
+      transition: transform .08s, box-shadow .08s, background .1s;
+    }
+    .btn-change-avatar:hover { background: var(--millet-light); }
+    .btn-change-avatar:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+
+    /* ── MODAL SÉLECTEUR D'AVATARS ─────────────────────────────── */
+    .avatar-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(43, 32, 24, 0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .avatar-modal-overlay.open { display: flex; }
+
+    .avatar-modal-box {
+      background: var(--cream);
+      border: 2.5px solid var(--ink);
+      border-radius: 22px;
+      box-shadow: 6px 6px 0 var(--ink);
+      padding: 28px 20px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      animation: popIn .22s ease-out;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-title {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 6px;
+    }
+    .modal-sub {
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    /* Grille des 6 avatars animaux */
+    .avatars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .avatar-choice-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 16px;
+      padding: 14px 8px;
+      font-size: 38px;
+      cursor: pointer;
+      box-shadow: 2.5px 2.5px 0 var(--ink);
+      transition: transform .1s, background .1s;
+    }
+    .avatar-choice-btn:hover { background: var(--millet); transform: translateY(-2px); }
+    .avatar-choice-btn.selected {
+      background: var(--saffron-light);
+      border-color: var(--saffron);
+      box-shadow: 2.5px 2.5px 0 var(--saffron);
+      transform: translateY(-3px);
+    }
+    .avatar-animal-label {
+      font-family: var(--font-ui);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--indigo);
+    }
+
+    .modal-btns-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn-modal-confirm {
+      background: var(--saffron);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 12px 24px;
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: transform .08s, box-shadow .08s;
+    }
+    .btn-modal-confirm:active { transform: translate(1px,1px); box-shadow: 1.5px 1.5px 0 var(--ink); }
+    .btn-modal-cancel {
+      background: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 12px 20px;
+      font-family: var(--font-titre);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 2.5px 2.5px 0 var(--ink);
+    }
+    .btn-modal-cancel:hover { background: var(--millet-light); }
+
+    /* ── GRILLE DE STATISTIQUES ────────────────────────────────── */
+    .section-title {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (min-width: 580px) {
+      .stats-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: 16px;
+      box-shadow: 3.5px 3.5px 0 var(--ink);
+      padding: 16px 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .stat-emoji { font-size: 30px; }
+    .stat-value {
+      font-family: var(--font-titre);
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    /* Score moyen en étoiles */
+    .avg-stars-row {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      font-size: 18px;
+      margin-top: 2px;
+    }
+    .star-empty { opacity: .25; }
+
+    /* ── HISTORIQUE DES RÉCITS LUS ─────────────────────────────── */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .history-item {
+      background: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      box-shadow: 3px 3px 0 var(--ink);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .history-emoji {
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .history-info { flex: 1; min-width: 0; }
+    .history-title {
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--indigo);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .history-date {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      opacity: .7;
+    }
+    .history-score-stars {
+      font-size: 13px;
+      display: flex;
+      gap: 1px;
+    }
+
+    /* ── SECTION BADGES ────────────────────────────────────────── */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    @media (min-width: 500px) {
+      .badges-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 720px) {
+      .badges-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .badge-card {
+      background: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 16px;
+      box-shadow: 3px 3px 0 var(--ink);
+      padding: 16px 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: transform .1s;
+    }
+    .badge-card:hover { transform: translateY(-2px); }
+    .badge-card.locked {
+      opacity: .38;
+      filter: grayscale(1);
+      cursor: not-allowed;
+    }
+    .badge-icon { font-size: 36px; }
+    .badge-name {
+      font-family: var(--font-titre);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.2;
+    }
+    .badge-desc {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      color: var(--ink);
+      opacity: .8;
+    }
+    .badge-unlocked-tag {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 1px 7px;
+      border-radius: 8px;
+      border: 1px solid;
+    }
+    .badge-card:not(.locked) .badge-unlocked-tag {
+      background: var(--leaf-light);
+      color: var(--leaf);
+      border-color: var(--leaf);
+    }
+    .badge-card.locked .badge-unlocked-tag {
+      background: var(--millet);
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* ── BOUTON DÉCONNEXION ────────────────────────────────────── */
+    .logout-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+    .btn-logout-full {
+      background: var(--white);
+      color: var(--terracotta);
+      border: 2px solid var(--terracotta);
+      border-radius: var(--rayon-pilule);
+      padding: 13px 28px;
+      font-family: var(--font-titre);
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--terracotta);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform .08s, box-shadow .08s, background .1s;
+    }
+    .btn-logout-full:hover { background: #FDF0EC; }
+    .btn-logout-full:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--terracotta); }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--cream);
+      padding: 18px 0;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: auto;
+    }
+    .site-footer a { color: var(--indigo); font-weight: 700; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Motif signature -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- HEADER -->
+  <header class="profile-header">
+    <div class="container header-inner">
+      <a href="dashboard-eleve.html" class="btn-back-dash">
+        <span>←</span>
+        <span>Ma bibliothèque</span>
+      </a>
+
+      <a href="dashboard-eleve.html" class="brand-mini" aria-label="Lis & Écoute">
+        <div class="brand-mini-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F7EFDA" stroke-width="2.3">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="brand-mini-title">Lis <span>&</span> Écoute</div>
+      </a>
+
+      <div style="width:120px;"></div><!-- spacer pour centrage logo -->
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container">
+
+    <!-- 1. HERO PROFIL : avatar, prénom, classe, âge -->
+    <section class="profile-hero-card">
+      <div class="avatar-display-wrap" id="avatar-display-wrap" title="Modifier mon avatar">
+        <div class="avatar-circle" id="avatar-main-circle">🦁</div>
+        <div class="avatar-edit-badge" id="btn-open-avatar-modal" title="Changer d'avatar">✏️</div>
+      </div>
+
+      <div class="profile-name" id="profile-display-name">Mariam</div>
+      <div class="profile-class-row">
+        <span class="profile-class-pill" id="profile-class-pill">CE1</span>
+        <span class="profile-age-pill" id="profile-age-pill">8 ans</span>
+      </div>
+
+      <button type="button" class="btn-change-avatar" id="btn-change-avatar-main">
+        <span>🐾</span>
+        <span>Modifier mon avatar</span>
+      </button>
+    </section>
+
+    <!-- 2. STATISTIQUES de progression -->
+    <h2 class="section-title">
+      <span>📊</span>
+      <span>Mes statistiques</span>
+    </h2>
+
+    <div class="stats-grid">
+      <!-- Récits lus -->
+      <div class="stat-card">
+        <span class="stat-emoji">📚</span>
+        <div class="stat-value" id="stat-stories-read">5</div>
+        <div class="stat-label">Récits lus</div>
+      </div>
+
+      <!-- Temps d'écoute total -->
+      <div class="stat-card">
+        <span class="stat-emoji">⏱️</span>
+        <div class="stat-value" id="stat-time-total">18 min</div>
+        <div class="stat-label">Temps d'écoute</div>
+      </div>
+
+      <!-- Score moyen (étoiles) -->
+      <div class="stat-card">
+        <span class="stat-emoji">⭐</span>
+        <div class="avg-stars-row" id="avg-stars-row">
+          <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span class="star-empty">⭐</span>
+        </div>
+        <div class="stat-value" id="stat-avg-score" style="font-size:22px;">8/10</div>
+        <div class="stat-label">Score moyen</div>
+      </div>
+
+      <!-- Badges gagnés -->
+      <div class="stat-card">
+        <span class="stat-emoji">🏅</span>
+        <div class="stat-value" id="stat-badges-count">4</div>
+        <div class="stat-label">Badges</div>
+      </div>
+    </div>
+
+    <!-- 3. HISTORIQUE DES RÉCITS LUS (PRD F15) -->
+    <h2 class="section-title">
+      <span>📖</span>
+      <span>Mes récits lus</span>
+    </h2>
+
+    <div class="history-list" id="history-list">
+      <!-- Injecté par JS -->
+    </div>
+
+    <!-- 4. BADGES GAGNÉS & À DÉBLOQUER -->
+    <h2 class="section-title">
+      <span>🏅</span>
+      <span>Mes badges</span>
+    </h2>
+
+    <div class="badges-grid" id="badges-grid">
+      <!-- Injecté par JS -->
+    </div>
+
+    <!-- 5. BOUTON DÉCONNEXION -->
+    <div class="logout-section">
+      <button type="button" class="btn-logout-full" id="btn-logout">
+        <span>🚪</span>
+        <span>Se déconnecter</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Motif bas -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none" style="transform:scaleY(-1)">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#5B8C51" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin-bottom:4px;">© 2026 Lis & Écoute — Le livre à l'oreille, le mot à la bouche.</p>
+      <p><a href="dashboard-eleve.html">Ma bibliothèque</a> • <a href="index.html">Accueil</a></p>
+    </div>
+  </footer>
+
+  <!-- MODAL SÉLECTEUR D'AVATARS -->
+  <div class="avatar-modal-overlay" id="avatar-modal-overlay" role="dialog" aria-modal="true" aria-label="Choisir un avatar">
+    <div class="avatar-modal-box">
+      <div class="modal-title">🐾 Choisis ton animal !</div>
+      <div class="modal-sub">Clique sur l'animal qui te ressemble le plus</div>
+
+      <div class="avatars-grid" id="avatars-grid">
+        <!-- Les 6 avatars animaux du PRD, injectés par JS -->
+      </div>
+
+      <div class="modal-btns-row">
+        <button type="button" class="btn-modal-confirm" id="btn-confirm-avatar">Valider ✓</button>
+        <button type="button" class="btn-modal-cancel" id="btn-cancel-avatar">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       LOGIQUE JAVASCRIPT — PROFIL ÉLÈVE 100% LOCAL (PRD 3.15, F14, F15)
+       ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ─────────────── DONNÉES STATIQUES ───────────────────────────────── */
+
+      // 6 avatars animaux (PRD — Lis & Écoute univers ivoirien)
+      const AVATARS = [
+        { id: 'lion',      emoji: '🦁', name: 'Lion Koffi' },
+        { id: 'elephant',  emoji: '🐘', name: 'Éléphant Sage' },
+        { id: 'chameleon', emoji: '🦎', name: 'Kolo le Caméléon' },
+        { id: 'parrot',    emoji: '🦜', name: 'Perroquet Bavard' },
+        { id: 'monkey',    emoji: '🐒', name: 'Singe Malicieux' },
+        { id: 'turtle',    emoji: '🐢', name: 'Tortue Sage' }
+      ];
+
+      // Badges de progression
+      const ALL_BADGES = [
+        { id: 'first_story',   icon: '📖', name: 'Premier récit',      desc: '1ère histoire lue',          unlocked: true  },
+        { id: 'five_stories',  icon: '📚', name: 'Grand lecteur',       desc: '5 histoires lues',           unlocked: true  },
+        { id: 'perfect_quiz',  icon: '🏆', name: 'Quiz parfait',        desc: 'Score 10/10 au quiz',        unlocked: true  },
+        { id: 'speed_reader',  icon: '⚡', name: 'Lecteur rapide',      desc: 'Lu à vitesse rapide',        unlocked: true  },
+        { id: 'ten_stories',   icon: '🌟', name: 'Super lecteur',       desc: '10 histoires lues',          unlocked: false },
+        { id: 'week_streak',   icon: '🔥', name: '7 jours de suite',    desc: 'Lu 7 jours consécutifs',     unlocked: false },
+        { id: 'all_levels',    icon: '🎓', name: 'Tous les niveaux',    desc: 'Lu des récits CP1 à CM2',    unlocked: false },
+        { id: 'quiz_master',   icon: '🎯', name: 'Champion des quiz',   desc: '5 quiz à plus de 8/10',      unlocked: false }
+      ];
+
+      // Historique exemple des récits lus
+      const DEFAULT_HISTORY = [
+        { emoji: '🚌', titre: "Koffi et le car d'Adjamé",        date: '24 sept. 2026', score: 10 },
+        { emoji: '🥭', titre: "Awa et le panier de mangues",      date: '23 sept. 2026', score: 8  },
+        { emoji: '⚽', titre: "Le match sous la pluie de Koumassi", date: '22 sept. 2026', score: 8  },
+        { emoji: '🌳', titre: "Le secret du vieux baobab",        date: '21 sept. 2026', score: 6  },
+        { emoji: '🐐', titre: "Le petit cabri de grand-père",     date: '20 sept. 2026', score: 8  }
+      ];
+
+      /* ─────────────── ÉTAT LOCAL ───────────────────────────────────────── */
+
+      let currentAvatarId    = 'lion';
+      let pendingAvatarId    = null;
+      let studentName        = 'Mariam';
+      let studentClass       = 'CE1';
+      let studentAge         = '8 ans';
+      let storiesRead        = 5;
+      let totalListenMinutes = 18;
+      let avgScore           = 8;    // sur 10
+      let totalStars         = 20;
+      let readingHistory     = [...DEFAULT_HISTORY];
+
+      /* ─────────────── CHARGEMENT localStorage ─────────────────────────── */
+      try {
+        const session = JSON.parse(localStorage.getItem('lis_ecoute_session') || '{}');
+        if (session.eleveName)  studentName  = session.eleveName;
+        if (session.classe)     studentClass = session.classe;
+        if (session.age)        studentAge   = session.age + ' ans';
+        if (session.avatarId)   currentAvatarId = session.avatarId;
+
+        const stats = JSON.parse(localStorage.getItem('lis_ecoute_stats') || '{}');
+        if (stats.storiesRead)        storiesRead        = stats.storiesRead;
+        if (stats.totalListenMinutes) totalListenMinutes = stats.totalListenMinutes;
+        if (stats.avgScore)           avgScore           = stats.avgScore;
+        if (stats.stars)              totalStars         = stats.stars;
+        if (stats.history)            readingHistory     = stats.history;
+      } catch (e) {}
+
+      /* ─────────────── MISE À JOUR DU DOM PROFIL ────────────────────────── */
+      function renderProfileHero() {
+        const av = AVATARS.find(a => a.id === currentAvatarId) || AVATARS[0];
+        document.getElementById('avatar-main-circle').textContent    = av.emoji;
+        document.getElementById('profile-display-name').textContent  = studentName;
+        document.getElementById('profile-class-pill').textContent    = studentClass;
+        document.getElementById('profile-age-pill').textContent      = studentAge;
+      }
+
+      function renderStats() {
+        document.getElementById('stat-stories-read').textContent = storiesRead;
+        document.getElementById('stat-time-total').textContent   = `${totalListenMinutes} min`;
+        document.getElementById('stat-badges-count').textContent = ALL_BADGES.filter(b => b.unlocked).length;
+
+        // Score moyen en étoiles (sur 5 étoiles, chaque étoile = 2pts)
+        const starsFilled = Math.round(avgScore / 2);
+        const starsHtml = Array.from({ length: 5 }, (_, i) =>
+          `<span class="${i < starsFilled ? '' : 'star-empty'}">⭐</span>`
+        ).join('');
+        document.getElementById('avg-stars-row').innerHTML = starsHtml;
+        document.getElementById('stat-avg-score').textContent = `${avgScore}/10`;
+      }
+
+      function renderHistory() {
+        const list = document.getElementById('history-list');
+        list.innerHTML = '';
+        if (readingHistory.length === 0) {
+          list.innerHTML = `<p style="font-family:var(--font-corps);color:var(--ink);text-align:center;padding:20px;">Aucun récit lu pour l'instant. Lance-toi !</p>`;
+          return;
+        }
+        readingHistory.forEach(item => {
+          const starsHtml = Array.from({ length: 5 }, (_, i) =>
+            `<span style="${i < Math.round(item.score / 2) ? '' : 'opacity:.25'}">⭐</span>`
+          ).join('');
+
+          const div = document.createElement('div');
+          div.className = 'history-item';
+          div.innerHTML = `
+            <span class="history-emoji">${item.emoji}</span>
+            <div class="history-info">
+              <div class="history-title">${item.titre}</div>
+              <div class="history-meta-row">
+                <span class="history-date">📅 ${item.date}</span>
+                <span class="history-score-stars">${starsHtml}</span>
+                <span style="font-family:var(--font-ui);font-size:12px;font-weight:700;color:var(--terracotta);">${item.score}/10</span>
+              </div>
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      }
+
+      function renderBadges() {
+        const grid = document.getElementById('badges-grid');
+        grid.innerHTML = '';
+        ALL_BADGES.forEach(badge => {
+          const card = document.createElement('div');
+          card.className = `badge-card${badge.unlocked ? '' : ' locked'}`;
+          card.title = badge.unlocked ? `Badge débloqué : ${badge.name}` : `Encore verrouillé — ${badge.desc}`;
+          card.innerHTML = `
+            <span class="badge-icon">${badge.icon}</span>
+            <div class="badge-name">${badge.name}</div>
+            <div class="badge-desc">${badge.desc}</div>
+            <span class="badge-unlocked-tag">${badge.unlocked ? '✓ Gagné' : '🔒 À débloquer'}</span>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      /* ─────────────── MODAL AVATARS ────────────────────────────────────── */
+      const modal          = document.getElementById('avatar-modal-overlay');
+      const avatarsGrid    = document.getElementById('avatars-grid');
+      const btnConfirm     = document.getElementById('btn-confirm-avatar');
+      const btnCancel      = document.getElementById('btn-cancel-avatar');
+
+      function renderAvatarPicker() {
+        avatarsGrid.innerHTML = '';
+        AVATARS.forEach(av => {
+          const btn = document.createElement('button');
+          btn.type      = 'button';
+          btn.className = `avatar-choice-btn${av.id === (pendingAvatarId || currentAvatarId) ? ' selected' : ''}`;
+          btn.innerHTML = `
+            <span>${av.emoji}</span>
+            <span class="avatar-animal-label">${av.name}</span>
+          `;
+          btn.addEventListener('click', () => {
+            pendingAvatarId = av.id;
+            document.querySelectorAll('.avatar-choice-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+          });
+          avatarsGrid.appendChild(btn);
+        });
+      }
+
+      function openModal() {
+        pendingAvatarId = currentAvatarId;
+        renderAvatarPicker();
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      btnConfirm.addEventListener('click', () => {
+        if (pendingAvatarId) {
+          currentAvatarId = pendingAvatarId;
+          // Sauvegarde dans la session
+          try {
+            const session = JSON.parse(localStorage.getItem('lis_ecoute_session') || '{}');
+            session.avatarId = currentAvatarId;
+            localStorage.setItem('lis_ecoute_session', JSON.stringify(session));
+          } catch (e) {}
+          renderProfileHero();
+        }
+        closeModal();
+      });
+
+      btnCancel.addEventListener('click', closeModal);
+      modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+      document.getElementById('btn-open-avatar-modal').addEventListener('click', openModal);
+      document.getElementById('btn-change-avatar-main').addEventListener('click', openModal);
+      document.getElementById('avatar-main-circle').addEventListener('click', openModal);
+
+      /* ─────────────── DÉCONNEXION ───────────────────────────────────────── */
+      document.getElementById('btn-logout').addEventListener('click', () => {
+        try { localStorage.removeItem('lis_ecoute_session'); } catch (e) {}
+        window.location.href = 'index.html';
+      });
+
+      /* ─────────────── INIT ──────────────────────────────────────────────── */
+      renderProfileHero();
+      renderStats();
+      renderHistory();
+      renderBadges();
+
+    })();
+  </script>
+</body>
+</html>

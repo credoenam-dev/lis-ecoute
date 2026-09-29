@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Inscription École — 30 jours d'essai gratuit — Lis & Écoute</title>
+  <meta name="description" content="Inscrivez votre école primaire en Côte d'Ivoire en 2 minutes. 30 jours d'essai gratuit pour toutes vos classes, sans carte bancaire.">
+
+  <!-- Polices officielles de la marque : Baloo 2, Zilla Slab, Work Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE : PALETTE TISSUS ET TERRE
+       ========================================================================== */
+    :root {
+      --cream: #F7EEDA;
+      --millet: #ECD9B4;
+      --white: #FFFFFF;
+      --ink: #2B2018;
+      --indigo: #234B5E;
+      --terracotta: #C1652B;
+      --saffron: #E8A23B;
+      --leaf: #5B8C51;
+
+      --millet-border: #D8C296;
+      --leaf-light: #EBF3EA;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui: 'Work Sans', sans-serif;
+
+      --rayon-carte: 16px;
+      --rayon-bouton: 12px;
+      --rayon-input: 10px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    /* Wave motif */
+    .wave-svg {
+      display: block;
+      width: 100%;
+      height: 32px;
+      background: var(--cream);
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 14px 0;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background-color: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0px var(--ink);
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: var(--font-titre);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--indigo);
+    }
+    .brand-name span {
+      color: var(--terracotta);
+    }
+    .brand-subtitle {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .btn-deja-inscrit {
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--indigo);
+      text-decoration: underline;
+    }
+
+    /* Main Form Layout */
+    .main-wrap {
+      flex: 1;
+      padding: 28px 0 44px;
+    }
+
+    .form-header-box {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .trial-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--millet);
+      color: var(--indigo);
+      border: 1.5px solid var(--indigo);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 5px 14px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+    }
+    .trial-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--leaf);
+    }
+    .form-title {
+      font-family: var(--font-titre);
+      font-size: clamp(26px, 5.5vw, 36px);
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .form-subtitle {
+      font-family: var(--font-corps);
+      font-size: 17px;
+      color: var(--ink);
+    }
+
+    /* Card Form */
+    .form-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 28px 22px;
+    }
+    @media (min-width: 520px) {
+      .form-card {
+        padding: 34px 30px;
+      }
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--indigo);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-label span.req {
+      color: var(--terracotta);
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      box-sizing: border-box;
+      font-family: var(--font-ui);
+      font-size: 16px;
+      color: var(--ink);
+      background-color: #FFFDF9;
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-input);
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.1s ease, box-shadow 0.1s ease;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--indigo);
+      background-color: #FFFFFF;
+      box-shadow: 2px 2px 0px var(--indigo);
+    }
+
+    .password-input-wrap {
+      position: relative;
+      width: 100%;
+    }
+    .password-input-wrap .form-input {
+      padding-right: 48px;
+    }
+    .btn-toggle-pwd {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--ink);
+      padding: 4px;
+    }
+
+    .form-hint {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: #6E5F52;
+      margin-top: 2px;
+    }
+
+    /* Checklist réassurance */
+    .reassurance-check-box {
+      background-color: var(--millet);
+      border: 1.5px solid var(--ink);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 6px;
+    }
+    .check-icon {
+      color: var(--leaf);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Bouton Submit */
+    .btn-submit {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      padding: 16px 20px;
+      border-radius: var(--rayon-bouton);
+      border: 2.5px solid var(--ink);
+      box-shadow: 4px 4px 0px var(--ink);
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      margin-top: 10px;
+    }
+    .btn-submit:hover {
+      background-color: #DE952B;
+    }
+    .btn-submit:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+
+    /* Modal / Message de succès post-submit */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(35, 75, 94, 0.7);
+      backdrop-filter: blur(2px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .modal-overlay.show {
+      display: flex;
+    }
+    .success-card {
+      background-color: var(--white);
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      box-shadow: 6px 6px 0px var(--ink);
+      max-width: 480px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      animation: popScale 0.25s ease;
+    }
+    @keyframes popScale {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .success-icon-badge {
+      width: 72px;
+      height: 72px;
+      background-color: var(--leaf-light);
+      border: 2px solid var(--leaf);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 16px;
+    }
+    .success-title {
+      font-family: var(--font-titre);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 8px;
+    }
+    .success-message {
+      font-family: var(--font-corps);
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .school-name-display {
+      font-weight: 700;
+      color: var(--terracotta);
+    }
+    .btn-access-dashboard {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      padding: 14px 20px;
+      border-radius: var(--rayon-bouton);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0px var(--ink);
+      text-decoration: none;
+    }
+    .redirect-countdown {
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      color: #7A695A;
+      margin-top: 10px;
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--cream);
+      padding: 24px 0;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: auto;
+    }
+    .site-footer a {
+      color: var(--indigo);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Motif vague signature en haut -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Accueil Lis & Écoute">
+        <div class="logo-badge">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F7EEDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M10 8h6"></path>
+            <path d="M10 12h4"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Lis <span>&</span> Écoute</div>
+          <div class="brand-subtitle">Le livre à l'oreille</div>
+        </div>
+      </a>
+
+      <div>
+        <a href="connexion.html" class="btn-deja-inscrit">Déjà inscrit ? Se connecter</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-wrap">
+    <div class="container">
+      
+      <div class="form-header-box">
+        <div class="trial-pill">
+          <span class="trial-pill-dot"></span>
+          <span>Essai gratuit 30 jours • Sans carte bancaire</span>
+        </div>
+        <h1 class="form-title">Création de compte établissement</h1>
+        <p class="form-subtitle">
+          Inscrivez votre école en 2 minutes. Toutes vos classes auront accès à la lecture karaoké dès aujourd'hui.
+        </p>
+      </div>
+
+      <!-- Formulaire d'inscription selon PRD 3.3 et F16 -->
+      <div class="form-card">
+        <form id="school-registration-form" novalidate>
+          <div class="form-grid">
+            
+            <!-- 1. Nom de l'école -->
+            <div class="form-group">
+              <label class="form-label" for="school-name">
+                <span>Nom de l'école <span class="req">*</span></span>
+              </label>
+              <input type="text" id="school-name" name="schoolName" class="form-input" placeholder="Ex. Groupe Scolaire Les Poussins de Cocody" required autocomplete="organization">
+            </div>
+
+            <!-- 2. Ville -->
+            <div class="form-group">
+              <label class="form-label" for="school-city">
+                <span>Ville / Commune <span class="req">*</span></span>
+              </label>
+              <input type="text" id="school-city" name="schoolCity" class="form-input" placeholder="Ex. Abidjan (Yopougon, Cocody, Treichville), Bouaké, San-Pédro..." required autocomplete="address-level2">
+            </div>
+
+            <!-- 3. Nombre de classes -->
+            <div class="form-group">
+              <label class="form-label" for="school-classes">
+                <span>Nombre de classes primaires <span class="req">*</span></span>
+              </label>
+              <select id="school-classes" name="schoolClasses" class="form-select" required>
+                <option value="" disabled selected>Sélectionnez le nombre de classes</option>
+                <option value="1 à 3 classes (CP1 à CE1)">1 à 3 classes (Petite école)</option>
+                <option value="4 à 6 classes (Cycle complet CP1 à CM2)">4 à 6 classes (Cycle complet CP1 - CM2)</option>
+                <option value="7 à 12 classes (Groupes scolaires à doubles flux)">7 à 12 classes (Groupe scolaire)</option>
+                <option value="Plus de 12 classes">Plus de 12 classes (Grand établissement)</option>
+              </select>
+            </div>
+
+            <!-- 4. Nom du directeur -->
+            <div class="form-group">
+              <label class="form-label" for="director-name">
+                <span>Nom & Prénom du directeur / directrice <span class="req">*</span></span>
+              </label>
+              <input type="text" id="director-name" name="directorName" class="form-input" placeholder="Ex. Mme Adjoua Kouamé" required autocomplete="name">
+            </div>
+
+            <!-- 5. Téléphone WhatsApp -->
+            <div class="form-group">
+              <label class="form-label" for="director-phone">
+                <span>Téléphone WhatsApp du directeur <span class="req">*</span></span>
+              </label>
+              <input type="tel" id="director-phone" name="directorPhone" class="form-input" placeholder="+225 07 00 00 00 00" required autocomplete="tel">
+              <span class="form-hint">Sert à recevoir vos codes d'accès et l'assistance du support.</span>
+            </div>
+
+            <!-- 6. Mot de passe -->
+            <div class="form-group">
+              <label class="form-label" for="school-password">
+                <span>Créer un mot de passe administrateur <span class="req">*</span></span>
+              </label>
+              <div class="password-input-wrap">
+                <input type="password" id="school-password" name="password" class="form-input" placeholder="Au moins 6 caractères" minlength="6" required autocomplete="new-password">
+                <button type="button" class="btn-toggle-pwd" id="btn-toggle-password" title="Afficher/masquer le mot de passe" aria-label="Afficher le mot de passe">👁️</button>
+              </div>
+            </div>
+
+            <!-- Badge de confirmation sans frais -->
+            <div class="reassurance-check-box">
+              <span class="check-icon">✓</span>
+              <span>Aucun moyen de paiement ni carte bancaire demandé aujourd'hui.</span>
+            </div>
+
+            <!-- Bouton submit -->
+            <button type="submit" class="btn-submit" id="btn-submit-form">
+              <span>Démarrer l'essai gratuit 30 jours</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal message de bienvenue post-submit -->
+  <div class="modal-overlay" id="success-modal" role="dialog" aria-modal="true">
+    <div class="success-card">
+      <div class="success-icon-badge">🎉</div>
+      <h2 class="success-title">Bienvenue !</h2>
+      <p class="success-message">
+        Votre établissement <span class="school-name-display" id="modal-school-name"></span> bénéficie de <strong>30 jours d'essai gratuit</strong> avec accès complet à tous les récits et questionnaires.
+      </p>
+      <a href="tableau-bord-ecole.html" class="btn-access-dashboard" id="btn-goto-dashboard">
+        <span>Accéder à mon tableau de bord école</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </a>
+      <div class="redirect-countdown" id="redirect-text">Redirection automatique dans <span id="count-num">3</span> secondes...</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin-bottom: 6px;">
+        © 2026 Lis & Écoute — La lecture karaoké pensée pour l'école primaire ivoirienne.
+      </p>
+      <p>
+        <a href="index.html">Accueil</a> • <a href="tarif.html">Grille des tarifs</a> • <a href="connexion.html">Connexion</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Afficher / masquer mot de passe
+      const pwdInput = document.getElementById('school-password');
+      const btnTogglePwd = document.getElementById('btn-toggle-password');
+      if (btnTogglePwd && pwdInput) {
+        btnTogglePwd.addEventListener('click', function() {
+          if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            btnTogglePwd.textContent = '🙈';
+          } else {
+            pwdInput.type = 'password';
+            btnTogglePwd.textContent = '👁️';
+          }
+        });
+      }
+
+      // Pré-sélection de la formule si passée en paramètre URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const chosenPlan = urlParams.get('formule');
+      if (chosenPlan) {
+        const selectClasses = document.getElementById('school-classes');
+        if (chosenPlan === 'petite' && selectClasses) selectClasses.selectedIndex = 1;
+        if (chosenPlan === 'moyenne' && selectClasses) selectClasses.selectedIndex = 2;
+        if (chosenPlan === 'grande' && selectClasses) selectClasses.selectedIndex = 3;
+      }
+
+      // Traitement du formulaire et stockage localStorage
+      const form = document.getElementById('school-registration-form');
+      const modal = document.getElementById('success-modal');
+      const modalSchoolName = document.getElementById('modal-school-name');
+      const countNum = document.getElementById('count-num');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const schoolName = document.getElementById('school-name').value.trim();
+        const schoolCity = document.getElementById('school-city').value.trim();
+        const schoolClasses = document.getElementById('school-classes').value;
+        const directorName = document.getElementById('director-name').value.trim();
+        const directorPhone = document.getElementById('director-phone').value.trim();
+        const password = document.getElementById('school-password').value;
+
+        // Validation minimale
+        if (!schoolName || !schoolCity || !schoolClasses || !directorName || !directorPhone || password.length < 6) {
+          alert("Veuillez renseigner tous les champs obligatoires (le mot de passe doit comporter au moins 6 caractères).");
+          return;
+        }
+
+        // Objet école enregistré en localStorage
+        const schoolData = {
+          schoolName: schoolName,
+          city: schoolCity,
+          classesCount: schoolClasses,
+          directorName: directorName,
+          directorPhone: directorPhone,
+          registeredAt: new Date().toISOString(),
+          trialEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          plan: chosenPlan || 'moyenne',
+          status: 'trial_active'
+        };
+
+        // Sauvegarde de l'école et de la session active
+        try {
+          localStorage.setItem('lis_ecoute_ecole', JSON.stringify(schoolData));
+          localStorage.setItem('lis_ecoute_session', JSON.stringify({
+            role: 'directeur',
+            userName: directorName,
+            schoolName: schoolName,
+            phone: directorPhone,
+            isLoggedIn: true
+          }));
+        } catch (err) {
+          console.warn('localStorage non disponible', err);
+        }
+
+        // Affichage modal de bienvenue
+        modalSchoolName.textContent = schoolName;
+        modal.classList.add('show');
+
+        // Compte à rebours avant redirection vers tableau-bord-ecole.html
+        let secondsLeft = 3;
+        const timer = setInterval(function() {
+          secondsLeft--;
+          if (countNum) countNum.textContent = secondsLeft;
+          if (secondsLeft <= 0) {
+            clearInterval(timer);
+            window.location.href = 'tableau-bord-ecole.html';
+          }
+        }, 1000);
+      });
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mon Espace Lecture — Lis & Écoute</title>
+  <meta name="description" content="Dashboard élève et catalogue de récits karaoké pour les élèves du CP1 au CM2 de Lis & Écoute.">
+
+  <!-- Polices officielles de la marque : Baloo 2, Zilla Slab, Work Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Supabase JS Client (v2) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE : PALETTE TISSUS ET TERRE
+       ========================================================================== */
+    :root {
+      --cream: #F7EEDA;
+      --millet: #ECD9B4;
+      --white: #FFFFFF;
+      --ink: #2B2018;
+      --indigo: #234B5E;
+      --terracotta: #C1652B;
+      --saffron: #E8A23B;
+      --leaf: #5B8C51;
+
+      --millet-border: #D8C296;
+      --leaf-light: #EBF3EA;
+      --saffron-light: #FEF4E2;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui: 'Work Sans', sans-serif;
+
+      --rayon-carte: 16px;
+      --rayon-bouton: 14px;
+      --rayon-pilule: 30px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Wave motif décoratif */
+    .wave-svg {
+      display: block;
+      width: 100%;
+      height: 28px;
+      background: var(--cream);
+    }
+
+    /* Header Élève */
+    .student-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background-color: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0px var(--ink);
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: var(--font-titre);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--indigo);
+    }
+    .brand-name span {
+      color: var(--terracotta);
+    }
+    .brand-subtitle {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    /* Profil Élève dans le Header */
+    .student-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .student-pill {
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 4px 12px 4px 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+    .student-avatar {
+      width: 32px;
+      height: 32px;
+      background-color: var(--saffron);
+      border: 1.5px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .student-name-text {
+      font-family: var(--font-titre);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.1;
+    }
+    .student-class-text {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--terracotta);
+    }
+
+    .btn-logout {
+      background-color: var(--millet);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border: 1.5px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      box-shadow: 2px 2px 0px var(--ink);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Section Accueil & Mascotte Kolo */
+    .welcome-section {
+      padding: 22px 0 16px;
+    }
+    .kolo-banner {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    @media (min-width: 600px) {
+      .kolo-banner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .kolo-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .kolo-mascot-circle {
+      width: 64px;
+      height: 64px;
+      background-color: var(--leaf);
+      border: 2.5px solid var(--ink);
+      border-radius: 50%;
+      box-shadow: 2px 2px 0px var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      flex-shrink: 0;
+    }
+    .kolo-greeting-h1 {
+      font-family: var(--font-titre);
+      font-size: clamp(22px, 5vw, 28px);
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .kolo-greeting-p {
+      font-family: var(--font-corps);
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    /* Badges de progression de l'élève (étoiles & récits lus) */
+    .student-stats-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stat-badge {
+      background-color: var(--millet);
+      border: 1.5px solid var(--ink);
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+    .stat-badge-icon {
+      font-size: 20px;
+    }
+    .stat-badge-val {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .stat-badge-label {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Récit recommandé du jour */
+    .featured-story-card {
+      background: linear-gradient(135deg, var(--saffron-light) 0%, var(--millet) 100%);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 18px 20px;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    @media (min-width: 680px) {
+      .featured-story-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .featured-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--terracotta);
+      color: #FFFFFF;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+    .featured-title {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+    .featured-desc {
+      font-family: var(--font-corps);
+      font-size: 16px;
+      color: var(--ink);
+    }
+    .btn-read-featured {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      padding: 13px 22px;
+      border-radius: var(--rayon-bouton);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0px var(--ink);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn-read-featured:hover {
+      background-color: #DE952B;
+    }
+    .btn-read-featured:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    /* Barre de Filtres par Niveau Scolaire (CP1 à CM2) */
+    .filter-section {
+      padding: 16px 0 12px;
+    }
+    .filter-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .filter-title {
+      font-family: var(--font-titre);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--indigo);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .story-count-badge {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      background-color: var(--white);
+      border: 1.5px solid var(--ink);
+      padding: 2px 8px;
+      border-radius: 12px;
+      color: var(--indigo);
+    }
+
+    .level-pills-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .level-pills-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .level-btn {
+      flex-shrink: 0;
+      background-color: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      font-family: var(--font-titre);
+      font-size: 15px;
+      font-weight: 800;
+      padding: 8px 18px;
+      border-radius: var(--rayon-pilule);
+      box-shadow: 2px 2px 0px var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s ease;
+    }
+    .level-btn:hover {
+      background-color: var(--millet);
+    }
+    .level-btn.active {
+      background-color: var(--indigo);
+      color: var(--cream);
+      box-shadow: 2.5px 2.5px 0px var(--ink);
+      transform: translateY(-2px);
+    }
+
+    /* Grille du Catalogue de Récits */
+    .catalog-section {
+      padding: 8px 0 44px;
+      flex: 1;
+    }
+
+    .stories-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 600px) {
+      .stories-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 920px) {
+      .stories-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Carte de récit */
+    .story-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .story-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 5px 5px 0px var(--ink);
+    }
+
+    .story-card-cover {
+      height: 130px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--ink);
+      position: relative;
+    }
+    /* Couleurs de couvertures chaleureuses selon le niveau */
+    .bg-level-cp { background-color: var(--millet); }
+    .bg-level-ce { background-color: #E2ECE1; }
+    .bg-level-cm { background-color: #F8E2D5; }
+
+    .story-cover-badges {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .badge-level-tag {
+      background-color: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 6px;
+      border: 1px solid var(--ink);
+      text-transform: uppercase;
+    }
+    .badge-status-tag {
+      background-color: var(--white);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+    }
+    .badge-status-tag.read {
+      background-color: var(--leaf-light);
+      color: var(--leaf);
+      border-color: var(--leaf);
+    }
+
+    .story-cover-emoji {
+      font-size: 40px;
+      line-height: 1;
+    }
+
+    .story-card-body {
+      padding: 16px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .story-duration-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--terracotta);
+      margin-bottom: 6px;
+    }
+    .story-title {
+      font-family: var(--font-titre);
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .story-summary {
+      font-family: var(--font-corps);
+      font-size: 15.5px;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+
+    /* Gros bouton tactile "Lire & Écouter" */
+    .btn-read-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 17px;
+      font-weight: 800;
+      padding: 13px 16px;
+      border-radius: var(--rayon-bouton);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0px var(--ink);
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn-read-action:hover {
+      background-color: #DE952B;
+    }
+    .btn-read-action:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+    .btn-read-action svg {
+      flex-shrink: 0;
+    }
+
+    /* Message si aucun récit trouvé */
+    .empty-state-box {
+      display: none;
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      padding: 36px 20px;
+      text-align: center;
+      box-shadow: 3px 3px 0px var(--ink);
+      margin-top: 10px;
+    }
+    .empty-state-emoji {
+      font-size: 44px;
+      margin-bottom: 8px;
+    }
+    .empty-state-title {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 4px;
+    }
+    .empty-state-desc {
+      font-family: var(--font-corps);
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--cream);
+      padding: 24px 0;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: auto;
+    }
+    .site-footer a {
+      color: var(--indigo);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Motif signature en haut -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- En-tête Élève -->
+  <header class="student-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Accueil Lis & Écoute">
+        <div class="logo-badge">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F7EEDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M10 8h6"></path>
+            <path d="M10 12h4"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Lis <span>&</span> Écoute</div>
+          <div class="brand-subtitle">Le livre à l'oreille</div>
+        </div>
+      </a>
+
+      <!-- Profil de l'élève connecté -->
+      <div class="student-badge-wrap">
+        <a href="profil-eleve.html" class="student-pill" title="Voir mon profil" style="text-decoration:none;">
+          <div class="student-avatar" id="header-avatar">🎒</div>
+          <div>
+            <div class="student-name-text" id="header-student-name">Mariam</div>
+            <div class="student-class-text" id="header-student-class">Classe : CE1</div>
+          </div>
+        </a>
+
+        <a href="connexion.html" class="btn-logout" title="Changer d'utilisateur">
+          <span>Quitter</span>
+          <span>🚪</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenu Principal -->
+  <main class="container">
+    
+    <!-- 1. Bannière d'accueil avec Kolo le caméléon -->
+    <section class="welcome-section">
+      <div class="kolo-banner">
+        <div class="kolo-banner-left">
+          <div class="kolo-mascot-circle" title="Kolo le caméléon">🦎</div>
+          <div>
+            <h1 class="kolo-greeting-h1" id="greeting-title">Akwaba Mariam !</h1>
+            <p class="kolo-greeting-p">
+              Prête pour une nouvelle histoire ? Écoute la voix du maître et suis les mots qui s'allument !
+            </p>
+          </div>
+        </div>
+
+        <!-- Statistiques de l'élève (Récits lus & étoiles) -->
+        <div class="student-stats-row">
+          <div class="stat-badge" title="Nombre de récits que tu as lus">
+            <span class="stat-badge-icon">📚</span>
+            <div>
+              <div class="stat-badge-val" id="stat-read-count">4</div>
+              <div class="stat-badge-label">Récits lus</div>
+            </div>
+          </div>
+
+          <div class="stat-badge" title="Étoiles gagnées aux questionnaires">
+            <span class="stat-badge-icon">⭐</span>
+            <div>
+              <div class="stat-badge-val" id="stat-stars-count">18</div>
+              <div class="stat-badge-label">Étoiles</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Récit du jour recommandé -->
+      <div class="featured-story-card">
+        <div>
+          <span class="featured-badge-pill">✨ Récit recommandé aujourd'hui</span>
+          <h2 class="featured-title">Koffi et le car d'Adjamé</h2>
+          <p class="featured-desc">
+            Ce matin, Koffi court sous les manguiers de Yopougon pour ne pas rater son car.
+          </p>
+        </div>
+        <a href="lecteur-karaoke.html" class="btn-read-featured">
+          <span>Lire maintenant</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- 2. Filtres par niveau scolaire (CP1 à CM2) -->
+    <section class="filter-section">
+      <div class="filter-header-row">
+        <div class="filter-title">
+          <span>Choisis ton niveau</span>
+          <span class="story-count-badge" id="visible-count">6 histoires</span>
+        </div>
+      </div>
+
+      <!-- Barre de boutons pilules défilables au doigt -->
+      <div class="level-pills-bar" role="tablist" aria-label="Niveau scolaire">
+        <button type="button" class="level-btn" data-level="all">🌟 Toutes les histoires</button>
+        <button type="button" class="level-btn" data-level="CP1">CP1 (6 ans)</button>
+        <button type="button" class="level-btn" data-level="CP2">CP2 (7 ans)</button>
+        <button type="button" class="level-btn active" data-level="CE1">CE1 (8 ans)</button>
+        <button type="button" class="level-btn" data-level="CE2">CE2 (9 ans)</button>
+        <button type="button" class="level-btn" data-level="CM1">CM1 (10 ans)</button>
+        <button type="button" class="level-btn" data-level="CM2">CM2 (11 ans)</button>
+      </div>
+    </section>
+
+    <!-- 3. Grille du Catalogue des Récits -->
+    <section class="catalog-section">
+      <div class="stories-grid" id="stories-grid-container">
+        <!-- Les cartes de récits sont injectées ici dynamiquement depuis Supabase / données locales -->
+      </div>
+
+      <!-- Message vide si aucun récit pour le niveau choisi -->
+      <div class="empty-state-box" id="empty-state">
+        <div class="empty-state-emoji">📖</div>
+        <div class="empty-state-title">Bientôt de nouveaux récits !</div>
+        <p class="empty-state-desc">Maître Yao prépare de nouvelles histoires pour ce niveau. Choisis un autre niveau pour continuer à lire !</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Motif signature en bas -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none" style="transform:scaleY(-1)">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#5B8C51" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin-bottom: 6px;">
+        © 2026 Lis & Écoute — Le livre à l'oreille, le mot à la bouche.
+      </p>
+      <p>
+        <a href="index.html">Accueil</a> • <a href="tarif.html">Tarifs Écoles</a> • <a href="connexion.html">Changer d'utilisateur</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       LOGIQUE JAVASCRIPT : SESSION ÉLÈVE & CONNEXION SUPABASE 'recits'
+       ========================================================================== */ -->
+  <script>
+    (function() {
+      'use strict';
+
+      // 1. Récupération de la session élève (stockée lors de connexion.html)
+      let studentName = 'Mariam';
+      let studentClass = 'CE1';
+      let studentLevel = 'CE1';
+
+      try {
+        const sessionData = JSON.parse(localStorage.getItem('lis_ecoute_session') || '{}');
+        if (sessionData && sessionData.eleveName) {
+          studentName = sessionData.eleveName;
+        }
+        if (sessionData && sessionData.classe) {
+          studentClass = sessionData.classe;
+          studentLevel = sessionData.classe.toUpperCase();
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+
+      // Mise à jour de l'affichage du profil élève
+      const headerName = document.getElementById('header-student-name');
+      const headerClass = document.getElementById('header-student-class');
+      const greetingTitle = document.getElementById('greeting-title');
+
+      if (headerName) headerName.textContent = studentName;
+      if (headerClass) headerClass.textContent = `Classe : ${studentClass}`;
+      if (greetingTitle) greetingTitle.textContent = `Akwaba ${studentName} !`;
+
+      // Mise à jour des compteurs de statistiques de lecture & étoiles
+      try {
+        const stats = JSON.parse(localStorage.getItem('lis_ecoute_stats') || '{}');
+        const readEl = document.getElementById('stat-read-count');
+        const starsEl = document.getElementById('stat-stars-count');
+        if (stats.storiesRead && readEl) readEl.textContent = stats.storiesRead;
+        if (stats.stars && starsEl) starsEl.textContent = stats.stars;
+      } catch (e) {}
+
+      // 2. Catalogue de récits par défaut (données locales contextualisées selon le PRD)
+      // Utilisé immédiatement ou en cas d'absence de configuration Supabase distante
+      const defaultStories = [
+        {
+          id: "recit-1",
+          titre: "Koffi et le car d'Adjamé",
+          niveau: "CE1",
+          duree: "2 min",
+          emoji: "🚌",
+          bg_class: "bg-level-ce",
+          resume: "Ce matin, Koffi court sous les manguiers de Yopougon pour ne pas rater son car.",
+          deja_lu: true,
+          lien: "lecteur-karaoke.html"
+        },
+        {
+          id: "recit-2",
+          titre: "Awa et le panier de mangues",
+          niveau: "CP1",
+          duree: "1 min 30 s",
+          emoji: "🥭",
+          bg_class: "bg-level-cp",
+          resume: "Au grand marché avec grand-mère, Awa apprend à compter les mangues mûres.",
+          deja_lu: true,
+          lien: "lecteur-karaoke.html"
+        },
+        {
+          id: "recit-3",
+          titre: "Le petit cabri de grand-père",
+          niveau: "CP2",
+          duree: "1 min 45 s",
+          emoji: "🐐",
+          bg_class: "bg-level-cp",
+          resume: "Un cabri espiègle saute par-dessus la barrière du village pour grignoter les feuilles de manioc.",
+          deja_lu: false,
+          lien: "lecteur-karaoke.html"
+        },
+        {
+          id: "recit-4",
+          titre: "Le match sous la pluie de Koumassi",
+          niveau: "CE2",
+          duree: "2 min 30 s",
+          emoji: "⚽",
+          bg_class: "bg-level-ce",
+          resume: "Quand l'averse tropicale commence, tous les enfants du quartier courent taper dans le ballon.",
+          deja_lu: true,
+          lien: "lecteur-karaoke.html"
+        },
+        {
+          id: "recit-5",
+          titre: "Le secret du vieux baobab",
+          niveau: "CM1",
+          duree: "3 min",
+          emoji: "🌳",
+          bg_class: "bg-level-cm",
+          resume: "Au village à Man, les anciens racontent pourquoi les oiseaux se rassemblent toujours sur la même branche.",
+          deja_lu: false,
+          lien: "lecteur-karaoke.html"
+        },
+        {
+          id: "recit-6",
+          titre: "Le grand masque d'or d'Abengourou",
+          niveau: "CM2",
+          duree: "3 min 30 s",
+          emoji: "👑",
+          bg_class: "bg-level-cm",
+          resume: "Un récit historique passionnant sur les trésors traditionnels et les contes royaux de l'Indénié.",
+          deja_lu: false,
+          lien: "lecteur-karaoke.html"
+        }
+      ];
+
+      let allStories = [...defaultStories];
+      let activeFilter = 'CE1'; // Filtré par défaut sur le niveau de l'élève
+
+      // 3. Connexion à la table Supabase 'recits' (si configurée dans l'environnement)
+      const SUPABASE_URL = window.LIS_ECOUTE_SUPABASE_URL || localStorage.getItem('supabase_url');
+      const SUPABASE_ANON_KEY = window.LIS_ECOUTE_SUPABASE_KEY || localStorage.getItem('supabase_key');
+
+      if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+        try {
+          const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          supabaseClient
+            .from('recits')
+            .select('*')
+            .then(response => {
+              if (response.data && response.data.length > 0) {
+                // Fusion ou remplacement des récits Supabase
+                const fetched = response.data.map(item => ({
+                  id: item.id || `recit-${Math.random()}`,
+                  titre: item.titre || item.title || "Histoire de lecture",
+                  niveau: item.niveau || item.level || "CE1",
+                  duree: item.duree || item.duration || "2 min",
+                  emoji: item.emoji || (item.niveau && item.niveau.startsWith('CP') ? '🥭' : item.niveau && item.niveau.startsWith('CE') ? '🚌' : '🌳'),
+                  bg_class: item.niveau && item.niveau.startsWith('CP') ? 'bg-level-cp' : item.niveau && item.niveau.startsWith('CM') ? 'bg-level-cm' : 'bg-level-ce',
+                  resume: item.resume || item.description || "Un récit passionnant à écouter et lire en karaoké.",
+                  deja_lu: Boolean(item.deja_lu),
+                  lien: item.audio_url ? `index.html#demo` : "index.html#demo"
+                }));
+                allStories = fetched;
+                renderStories();
+              }
+            })
+            .catch(err => {
+              console.log("Utilisation du catalogue local", err);
+            });
+        } catch(err) {
+          console.log("Supabase initialisation fallback", err);
+        }
+      }
+
+      // 4. Rendu des cartes de récits dans le catalogue
+      const gridContainer = document.getElementById('stories-grid-container');
+      const emptyState = document.getElementById('empty-state');
+      const visibleCountBadge = document.getElementById('visible-count');
+
+      function renderStories() {
+        if (!gridContainer) return;
+        gridContainer.innerHTML = '';
+
+        const filtered = allStories.filter(story => {
+          if (activeFilter === 'all') return true;
+          return story.niveau.toUpperCase() === activeFilter.toUpperCase();
+        });
+
+        if (visibleCountBadge) {
+          visibleCountBadge.textContent = `${filtered.length} histoire${filtered.length > 1 ? 's' : ''}`;
+        }
+
+        if (filtered.length === 0) {
+          emptyState.style.display = 'block';
+          return;
+        } else {
+          emptyState.style.display = 'none';
+        }
+
+        filtered.forEach(story => {
+          const card = document.createElement('div');
+          card.className = 'story-card';
+
+          const readStatusHtml = story.deja_lu 
+            ? '<span class="badge-status-tag read">✓ Déjà lu</span>'
+            : '<span class="badge-status-tag">Nouveau</span>';
+
+          card.innerHTML = `
+            <div class="story-card-cover ${story.bg_class || 'bg-level-ce'}">
+              <div class="story-cover-badges">
+                <span class="badge-level-tag">Niveau ${story.niveau}</span>
+                ${readStatusHtml}
+              </div>
+              <div class="story-cover-emoji">${story.emoji || '📖'}</div>
+            </div>
+
+            <div class="story-card-body">
+              <div class="story-duration-row">
+                <span>⏱️ Durée estimée :</span>
+                <span>${story.duree}</span>
+              </div>
+              <h3 class="story-title">${story.titre}</h3>
+              <p class="story-summary">${story.resume}</p>
+              
+              <a href="${story.lien || 'index.html#demo'}" class="btn-read-action">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <span>Lire &amp; Écouter</span>
+              </a>
+            </div>
+          `;
+
+          gridContainer.appendChild(card);
+        });
+      }
+
+      // 5. Gestion des clics sur les boutons de filtres par niveau
+      const levelButtons = document.querySelectorAll('.level-btn');
+      levelButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          levelButtons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          activeFilter = this.getAttribute('data-level');
+          renderStories();
+        });
+      });
+
+      // Synchronisation du filtre avec la classe de l'élève au chargement
+      levelButtons.forEach(btn => {
+        if (btn.getAttribute('data-level') === studentLevel) {
+          levelButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = studentLevel;
+        }
+      });
+
+      // Rendu initial
+      renderStories();
+
+    })();
+  </script>
+</body>
+</html>

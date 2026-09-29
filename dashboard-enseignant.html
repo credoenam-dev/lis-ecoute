@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Tableau de bord Classe — Lis & Écoute</title>
+  <meta name="description" content="Espace enseignant Lis & Écoute — Suivre la progression de lecture et de compréhension de chaque élève de la classe.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE
+       ========================================================================== */
+    :root {
+      --cream:         #F7EFDA;
+      --millet:        #ECD9B4;
+      --millet-light:  #FBF6EB;
+      --millet-border: #D8C296;
+      --white:         #FFFFFF;
+      --ink:           #2B2018;
+      --indigo:        #234B5E;
+      --terracotta:    #C1652B;
+      --saffron:       #E8A23B;
+      --saffron-light: #FEF4E2;
+      --leaf:          #5B8C51;
+      --leaf-light:    #EBF3EA;
+      --red-soft:      #FDECEA;
+      --red-text:      #C0392B;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui:    'Work Sans', sans-serif;
+
+      --rayon-carte:  16px;
+      --rayon-bouton: 12px;
+      --rayon-pilule: 30px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .wave-svg { display: block; width: 100%; height: 22px; }
+
+    /* ── HEADER ─────────────────────────────────────────────────── */
+    .teacher-header {
+      background: var(--indigo);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: 0 2px 0 rgba(0,0,0,.25);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .brand-teacher {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .brand-badge {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,.15);
+      border: 2px solid rgba(255,255,255,.35);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-name-teacher {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+    .brand-name-teacher span { color: var(--saffron); }
+
+    .teacher-info-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .teacher-avatar-sm {
+      width: 36px; height: 36px;
+      background: var(--saffron);
+      border: 2px solid rgba(255,255,255,.5);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .teacher-name-block {
+      display: none;
+    }
+    @media (min-width: 520px) {
+      .teacher-name-block { display: block; }
+    }
+    .teacher-name-val {
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+    .teacher-class-val {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,.7);
+    }
+
+    .btn-logout-teacher {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,.3);
+      border-radius: var(--rayon-pilule);
+      padding: 7px 14px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-logout-teacher:hover { background: rgba(255,255,255,.22); }
+
+    /* ── SECTION HERO STATS ─────────────────────────────────────── */
+    .class-hero {
+      background: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0 var(--ink);
+      padding: 20px;
+      margin: 18px 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    @media (min-width: 620px) {
+      .class-hero { flex-direction: row; align-items: center; justify-content: space-between; }
+    }
+
+    .class-hero-left h1 {
+      font-family: var(--font-titre);
+      font-size: clamp(20px, 4vw, 26px);
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.15;
+    }
+    .class-hero-left p {
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      color: var(--ink);
+      opacity: .75;
+      margin-top: 3px;
+    }
+
+    .hero-stats-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero-stat-chip {
+      background: var(--millet-light);
+      border: 1.5px solid var(--ink);
+      border-radius: 12px;
+      padding: 10px 16px;
+      text-align: center;
+      min-width: 80px;
+    }
+    .hero-chip-val {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .hero-chip-label {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--ink);
+      opacity: .7;
+    }
+
+    /* ── BARRE OUTILS ─────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .section-title-teacher {
+      font-family: var(--font-titre);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--indigo);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pupil-count-badge {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--white);
+      border: 1.5px solid var(--ink);
+      padding: 2px 9px;
+      border-radius: 10px;
+      color: var(--indigo);
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Bouton primaire indigo */
+    .btn-teacher-primary {
+      background: var(--saffron);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 9px 18px;
+      font-family: var(--font-titre);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2.5px 2.5px 0 var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      transition: transform .08s, box-shadow .08s;
+    }
+    .btn-teacher-primary:hover { background: #DE952B; }
+    .btn-teacher-primary:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+
+    /* Bouton secondaire blanc */
+    .btn-teacher-secondary {
+      background: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 8px 16px;
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      transition: background .1s, transform .08s;
+    }
+    .btn-teacher-secondary:hover { background: var(--millet-light); }
+    .btn-teacher-secondary:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+
+    /* ── FILTRE NIVEAU ─────────────────────────────────────────── */
+    .filter-pills-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+      margin-bottom: 14px;
+    }
+    .filter-pills-bar::-webkit-scrollbar { display: none; }
+
+    .filter-pill {
+      flex-shrink: 0;
+      background: var(--white);
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 6px 14px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 1.5px 1.5px 0 var(--ink);
+      transition: all .1s;
+    }
+    .filter-pill:hover { background: var(--millet); }
+    .filter-pill.active {
+      background: var(--indigo);
+      color: var(--cream);
+      border-color: var(--indigo);
+    }
+
+    /* ── TABLEAU ÉLÈVES ────────────────────────────────────────── */
+    .pupils-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .pupil-card {
+      background: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 3px 3px 0 var(--ink);
+      overflow: hidden;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .pupil-card:hover { transform: translateY(-2px); box-shadow: 4px 4px 0 var(--ink); }
+
+    /* Bande supérieure : identité de l'élève */
+    .pupil-card-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px 12px;
+      border-bottom: 1.5px solid var(--millet-border);
+    }
+
+    .pupil-avatar {
+      width: 46px; height: 46px;
+      background: var(--millet);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      box-shadow: 2px 2px 0 var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .pupil-identity { flex: 1; min-width: 0; }
+    .pupil-name {
+      font-family: var(--font-titre);
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--indigo);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pupil-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .pupil-level-tag {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: var(--indigo);
+      color: var(--cream);
+      border: 1px solid var(--ink);
+    }
+    .pupil-last-read {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--ink);
+      opacity: .65;
+    }
+
+    /* Indicateur d'activité */
+    .activity-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 8px;
+      border: 1px solid;
+    }
+    .activity-tag.active   { background: var(--leaf-light); color: var(--leaf); border-color: var(--leaf); }
+    .activity-tag.inactive { background: var(--red-soft);   color: var(--red-text);  border-color: var(--red-text); }
+    .activity-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .activity-tag.active   .activity-dot { background: var(--leaf); }
+    .activity-tag.inactive .activity-dot { background: var(--red-text); }
+
+    /* Bande de stats */
+    .pupil-card-stats {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0;
+    }
+
+    .pupil-stat-cell {
+      flex: 1;
+      padding: 12px 14px;
+      border-right: 1.5px solid var(--millet-border);
+      text-align: center;
+    }
+    .pupil-stat-cell:last-child { border-right: none; }
+
+    .pupil-stat-val {
+      font-family: var(--font-titre);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .pupil-stat-label {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink);
+      opacity: .65;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      margin-top: 2px;
+    }
+
+    /* Barre de progression du score */
+    .score-progress-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 14px;
+      flex: 1;
+    }
+    .score-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: var(--millet);
+      border: 1.5px solid var(--ink);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .3s ease;
+    }
+    .score-bar-fill.high   { background: var(--leaf); }
+    .score-bar-fill.medium { background: var(--saffron); }
+    .score-bar-fill.low    { background: var(--terracotta); }
+    .score-bar-text {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--indigo);
+    }
+
+    /* Boutons d'action de la carte élève */
+    .pupil-card-actions {
+      display: flex;
+      gap: 8px;
+      padding: 10px 14px 14px;
+      border-top: 1.5px solid var(--millet-border);
+    }
+
+    /* ── MODAL DÉTAIL ÉLÈVE ─────────────────────────────────────── */
+    .detail-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(43,32,24,.55);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 12px 20px;
+      overflow-y: auto;
+    }
+    .detail-modal-overlay.open { display: flex; }
+
+    .detail-modal-box {
+      background: var(--cream);
+      border: 2.5px solid var(--ink);
+      border-radius: 20px;
+      box-shadow: 6px 6px 0 var(--ink);
+      padding: 28px 20px;
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      animation: popIn .22s ease-out;
+      position: relative;
+    }
+    @keyframes popIn { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: scale(1); } }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .modal-student-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .modal-student-avatar {
+      width: 58px; height: 58px;
+      background: var(--millet);
+      border: 2.5px solid var(--ink);
+      border-radius: 50%;
+      box-shadow: 3px 3px 0 var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+    }
+    .modal-student-name {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--indigo);
+    }
+    .modal-student-sub {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      opacity: .7;
+    }
+
+    .modal-section-title {
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin: 16px 0 10px;
+    }
+
+    .modal-history-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      border: 1.5px solid var(--ink);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+    }
+    .modal-history-emoji { font-size: 22px; flex-shrink: 0; }
+    .modal-history-info  { flex: 1; min-width: 0; }
+    .modal-history-title {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal-history-meta {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--ink);
+      opacity: .65;
+      margin-top: 1px;
+    }
+    .modal-history-score {
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .modal-history-score.high   { color: var(--leaf); }
+    .modal-history-score.medium { color: var(--saffron); }
+    .modal-history-score.low    { color: var(--terracotta); }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--cream);
+      padding: 16px 0;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: auto;
+    }
+    .site-footer a { color: var(--indigo); font-weight: 700; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER ENSEIGNANT -->
+  <header class="teacher-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-teacher" aria-label="Lis & Écoute Accueil">
+        <div class="brand-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F7EFDA" stroke-width="2.3">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="brand-name-teacher">Lis <span>&</span> Écoute</div>
+      </a>
+
+      <div class="teacher-info-pill">
+        <div class="teacher-avatar-sm" id="teacher-avatar-icon">👨🏾‍🏫</div>
+        <div class="teacher-name-block">
+          <div class="teacher-name-val" id="teacher-name-display">Maître Yao</div>
+          <div class="teacher-class-val" id="teacher-class-display">Classe CE1-B · École Sainte-Marie</div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-logout-teacher" id="btn-logout-teacher">
+        <span>🚪</span>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container">
+
+    <!-- 1. HERO : résumé de la classe -->
+    <section class="class-hero">
+      <div class="class-hero-left">
+        <h1 id="class-hero-title">Classe CE1-B — Ma classe</h1>
+        <p id="class-hero-sub">Semaine du 23 au 27 septembre 2026 • 12 élèves inscrits</p>
+      </div>
+
+      <div class="hero-stats-row">
+        <div class="hero-stat-chip">
+          <div class="hero-chip-val" id="chip-active">9</div>
+          <div class="hero-chip-label">Actifs</div>
+        </div>
+        <div class="hero-stat-chip">
+          <div class="hero-chip-val" id="chip-stories">47</div>
+          <div class="hero-chip-label">Récits lus</div>
+        </div>
+        <div class="hero-stat-chip">
+          <div class="hero-chip-val" id="chip-avg">7.4</div>
+          <div class="hero-chip-label">Score moyen</div>
+        </div>
+        <div class="hero-stat-chip">
+          <div class="hero-chip-val" id="chip-alert">3</div>
+          <div class="hero-chip-label">⚠️ Alertes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. BARRE D'OUTILS & FILTRES -->
+    <div class="toolbar-row">
+      <div class="section-title-teacher">
+        <span>👥</span>
+        <span>Mes élèves</span>
+        <span class="pupil-count-badge" id="pupils-count-badge">12 élèves</span>
+      </div>
+      <div class="toolbar-actions">
+        <a href="ajout-histoire.html" class="btn-teacher-primary" id="btn-add-story">
+          <span>+</span>
+          <span>Ajouter une histoire</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Filtres par niveau et statut -->
+    <div class="filter-pills-bar" role="group" aria-label="Filtrer les élèves">
+      <button type="button" class="filter-pill active" data-filter="all">Tous les élèves</button>
+      <button type="button" class="filter-pill" data-filter="active">✅ Actifs cette semaine</button>
+      <button type="button" class="filter-pill" data-filter="inactive">⚠️ Inactifs</button>
+      <button type="button" class="filter-pill" data-filter="low-score">📉 Score faible</button>
+    </div>
+
+    <!-- 3. LISTE DES ÉLÈVES -->
+    <div class="pupils-list" id="pupils-list">
+      <!-- Généré dynamiquement par JS -->
+    </div>
+
+  </main>
+
+  <!-- MODAL DÉTAIL ÉLÈVE -->
+  <div class="detail-modal-overlay" id="detail-modal-overlay" role="dialog" aria-modal="true">
+    <div class="detail-modal-box" id="detail-modal-box">
+      <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Fermer">✕</button>
+
+      <div class="modal-student-header">
+        <div class="modal-student-avatar" id="modal-student-avatar">🦁</div>
+        <div>
+          <div class="modal-student-name" id="modal-student-name">Mariam</div>
+          <div class="modal-student-sub" id="modal-student-sub">CE1 · Dernière lecture : hier</div>
+        </div>
+      </div>
+
+      <div class="modal-section-title">Récits lus & Scores</div>
+      <div id="modal-history-container">
+        <!-- Injecté par JS -->
+      </div>
+
+      <div class="modal-section-title">Analyse rapide</div>
+      <div id="modal-analysis-box" style="
+        background: var(--millet-light);
+        border: 1.5px solid var(--ink);
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-family: var(--font-corps);
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--ink);
+      ">
+        <!-- Injecté par JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Motif bas -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none" style="transform:scaleY(-1);background:var(--cream)">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#5B8C51" stroke-width="3" opacity="0.35"/>
+  </svg>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Lis & Écoute — <a href="index.html">Accueil</a> • <a href="connexion.html">Connexion</a></p>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       LOGIQUE JAVASCRIPT — DASHBOARD ENSEIGNANT (PRD 3.9 & 3.10)
+       ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ─────────────── DONNÉES EXEMPLES ───────────────────────────────── */
+
+      const AVATARS = ['🦁','🐘','🦎','🦜','🐒','🐢','🦊','🐬','🦋','🐝','🦒','🐆'];
+
+      const CLASS_PUPILS = [
+        {
+          id: 1,  name: 'Mariam Traoré',   level: 'CE1', avatar: '🦎',
+          storiesRead: 5, listenMin: 18, avgScore: 8,
+          lastRead: 'Auj.', active: true,
+          history: [
+            { emoji:'🚌', title:"Koffi et le car d'Adjamé",     date:'24 sept.', score:10 },
+            { emoji:'🥭', title:"Awa et le panier de mangues",   date:'23 sept.', score:8  },
+            { emoji:'⚽', title:"Le match sous la pluie",        date:'21 sept.', score:8  },
+            { emoji:'🌳', title:"Le secret du vieux baobab",     date:'20 sept.', score:6  },
+            { emoji:'🐐', title:"Le petit cabri de grand-père",  date:'18 sept.', score:8  }
+          ],
+          analysis: "Mariam progresse régulièrement. Son vocabulaire s'enrichit. Encouragez-la à lire un récit de niveau CE2 la semaine prochaine."
+        },
+        {
+          id: 2,  name: 'Koffi Assoumou',  level: 'CE1', avatar: '🦁',
+          storiesRead: 4, listenMin: 14, avgScore: 9,
+          lastRead: 'Hier',  active: true,
+          history: [
+            { emoji:'🚌', title:"Koffi et le car d'Adjamé",     date:'23 sept.', score:10 },
+            { emoji:'👑', title:"Le masque d'or d'Abengourou",  date:'22 sept.', score:8  },
+            { emoji:'🥭', title:"Awa et le panier de mangues",  date:'20 sept.', score:10 },
+            { emoji:'🌳', title:"Le secret du vieux baobab",    date:'19 sept.', score:8  }
+          ],
+          analysis: "Koffi est très bon lecteur. Score moyen de 9/10. Il mérite un défi avec les textes CM1."
+        },
+        {
+          id: 3,  name: 'Awa Konaté',      level: 'CE1', avatar: '🦋',
+          storiesRead: 3, listenMin: 11, avgScore: 7,
+          lastRead: 'Hier',  active: true,
+          history: [
+            { emoji:'🥭', title:"Awa et le panier de mangues",   date:'24 sept.', score:8  },
+            { emoji:'🐐', title:"Le petit cabri de grand-père",   date:'22 sept.', score:6  },
+            { emoji:'⚽', title:"Le match sous la pluie",         date:'19 sept.', score:8  }
+          ],
+          analysis: "Awa est stable mais peut progresser. Suggérez-lui de relire « Le petit cabri » et de refaire le quiz."
+        },
+        {
+          id: 4,  name: 'Boubacar Diallo',  level: 'CE1', avatar: '🐒',
+          storiesRead: 6, listenMin: 22, avgScore: 8,
+          lastRead: 'Auj.', active: true,
+          history: [
+            { emoji:'🚌', title:"Koffi et le car d'Adjamé",    date:'25 sept.', score:10 },
+            { emoji:'🌳', title:"Le secret du vieux baobab",   date:'24 sept.', score:8  },
+            { emoji:'👑', title:"Le masque d'or d'Abengourou", date:'23 sept.', score:8  },
+            { emoji:'⚽', title:"Le match sous la pluie",      date:'22 sept.', score:6  },
+            { emoji:'🥭', title:"Awa et le panier de mangues", date:'20 sept.', score:8  },
+            { emoji:'🐐', title:"Le petit cabri",              date:'18 sept.', score:8  }
+          ],
+          analysis: "Boubacar est le lecteur le plus actif de la classe ! Excellent engagement. Proposez-lui des textes CM2."
+        },
+        {
+          id: 5,  name: 'Fatou Coulibaly',  level: 'CE1', avatar: '🦜',
+          storiesRead: 2, listenMin: 6,  avgScore: 5,
+          lastRead: 'Il y a 4j', active: false,
+          history: [
+            { emoji:'🥭', title:"Awa et le panier de mangues", date:'21 sept.', score:6 },
+            { emoji:'🐐', title:"Le petit cabri",              date:'18 sept.', score:4 }
+          ],
+          analysis: "⚠️ Fatou a besoin d'aide. Score faible (5/10 en moyenne) et peu active. Recommandez-lui des textes CP2 plus accessibles et encouragez la réécoute."
+        },
+        {
+          id: 6,  name: 'Serge Kouakou',    level: 'CE1', avatar: '🐘',
+          storiesRead: 1, listenMin: 3,  avgScore: 4,
+          lastRead: 'Il y a 5j', active: false,
+          history: [
+            { emoji:'🚌', title:"Koffi et le car d'Adjamé", date:'20 sept.', score:4 }
+          ],
+          analysis: "⚠️ Serge n'a lu qu'un récit et a eu un score faible. Il est peut-être en difficulté — rencontrez-le pour vérifier."
+        },
+        {
+          id: 7,  name: 'Adjoua Yao',       level: 'CE1', avatar: '🦒',
+          storiesRead: 4, listenMin: 15, avgScore: 9,
+          lastRead: 'Hier',  active: true,
+          history: [
+            { emoji:'👑', title:"Le masque d'or d'Abengourou", date:'24 sept.', score:10 },
+            { emoji:'🌳', title:"Le secret du vieux baobab",   date:'22 sept.', score:10 },
+            { emoji:'⚽', title:"Le match sous la pluie",      date:'20 sept.', score:8  },
+            { emoji:'🥭', title:"Awa et le panier de mangues", date:'18 sept.', score:8  }
+          ],
+          analysis: "Adjoua est excellente. Score moyen 9/10. Proposez-lui un récit CM1 ou CM2 pour la stimuler."
+        },
+        {
+          id: 8,  name: 'Ibrahim Sanogo',   level: 'CE1', avatar: '🐬',
+          storiesRead: 3, listenMin: 10, avgScore: 7,
+          lastRead: 'Auj.', active: true,
+          history: [
+            { emoji:'🚌', title:"Koffi et le car d'Adjamé",  date:'25 sept.', score:8 },
+            { emoji:'🐐', title:"Le petit cabri",             date:'23 sept.', score:6 },
+            { emoji:'🥭', title:"Awa et le panier de mangues",date:'21 sept.', score:8 }
+          ],
+          analysis: "Ibrahim progresse bien. Score 7/10 en moyenne. Encouragez-le à lire un récit de plus cette semaine."
+        },
+        {
+          id: 9,  name: 'Rokia Bamba',      level: 'CE1', avatar: '🐝',
+          storiesRead: 0, listenMin: 0,  avgScore: 0,
+          lastRead: 'Jamais', active: false,
+          history: [],
+          analysis: "⚠️ Rokia n'a encore lu aucun récit. Prenez le temps de lui montrer comment se connecter et démarrer sa première histoire."
+        },
+        {
+          id: 10, name: 'Narcisse Gbagbo',  level: 'CE1', avatar: '🦊',
+          storiesRead: 5, listenMin: 17, avgScore: 7,
+          lastRead: 'Hier',  active: true,
+          history: [
+            { emoji:'⚽', title:"Le match sous la pluie",      date:'24 sept.', score:8 },
+            { emoji:'🌳', title:"Le secret du vieux baobab",   date:'22 sept.', score:6 },
+            { emoji:'🚌', title:"Koffi et le car d'Adjamé",   date:'20 sept.', score:8 },
+            { emoji:'🥭', title:"Awa et le panier de mangues", date:'18 sept.', score:8 },
+            { emoji:'🐐', title:"Le petit cabri",              date:'16 sept.', score:6 }
+          ],
+          analysis: "Narcisse est régulier et constant. Score 7/10. Proposez-lui un récit avec plus de vocabulaire pour progresser."
+        },
+        {
+          id: 11, name: 'Chloé Assié',      level: 'CE1', avatar: '🦋',
+          storiesRead: 4, listenMin: 14, avgScore: 8,
+          lastRead: 'Auj.', active: true,
+          history: [
+            { emoji:'👑', title:"Le masque d'or d'Abengourou", date:'25 sept.', score:8  },
+            { emoji:'🌳', title:"Le secret du vieux baobab",   date:'23 sept.', score:8  },
+            { emoji:'⚽', title:"Le match sous la pluie",      date:'21 sept.', score:10 },
+            { emoji:'🐐', title:"Le petit cabri",              date:'18 sept.', score:6  }
+          ],
+          analysis: "Chloé est régulière et motivée. Continue de progresser. Son score au quiz du match était parfait !"
+        },
+        {
+          id: 12, name: 'Koné Dramane',     level: 'CE1', avatar: '🦁',
+          storiesRead: 2, listenMin: 8,  avgScore: 6,
+          lastRead: 'Il y a 3j', active: false,
+          history: [
+            { emoji:'🥭', title:"Awa et le panier de mangues", date:'22 sept.', score:6 },
+            { emoji:'🚌', title:"Koffi et le car d'Adjamé",   date:'19 sept.', score:6 }
+          ],
+          analysis: "⚠️ Koné a été peu actif cette semaine. Son score est moyen (6/10). Encouragez-le avec un récit animé qu'il aimera."
+        }
+      ];
+
+      /* ─────────────── ÉTAT ──────────────────────────────────────────── */
+      let activeFilter = 'all';
+      let openPupilId  = null;
+
+      /* ─────────────── DONNÉES ENSEIGNANT ───────────────────────────── */
+      function loadTeacherInfo() {
+        try {
+          const session = JSON.parse(localStorage.getItem('lis_ecoute_session') || '{}');
+          if (session.userName) {
+            document.getElementById('teacher-name-display').textContent = session.userName;
+          }
+        } catch(e) {}
+      }
+
+      /* ─────────────── RENDU DES CARTES ÉLÈVES ──────────────────────── */
+      function getFilteredPupils() {
+        switch (activeFilter) {
+          case 'active':    return CLASS_PUPILS.filter(p => p.active);
+          case 'inactive':  return CLASS_PUPILS.filter(p => !p.active);
+          case 'low-score': return CLASS_PUPILS.filter(p => p.avgScore < 7);
+          default:          return CLASS_PUPILS;
+        }
+      }
+
+      function scoreClass(score) {
+        if (score >= 8) return 'high';
+        if (score >= 6) return 'medium';
+        return 'low';
+      }
+
+      function renderPupils() {
+        const pupils = getFilteredPupils();
+        const list   = document.getElementById('pupils-list');
+        document.getElementById('pupils-count-badge').textContent = `${pupils.length} élève${pupils.length > 1 ? 's' : ''}`;
+        list.innerHTML = '';
+
+        if (pupils.length === 0) {
+          list.innerHTML = `
+            <div style="text-align:center;padding:40px 20px;font-family:var(--font-corps);color:var(--ink);">
+              <div style="font-size:40px;margin-bottom:8px;">🔍</div>
+              <p>Aucun élève dans cette catégorie.</p>
+            </div>`;
+          return;
+        }
+
+        pupils.forEach(pupil => {
+          const sc    = scoreClass(pupil.avgScore);
+          const pct   = Math.round((pupil.avgScore / 10) * 100);
+          const card  = document.createElement('div');
+          card.className   = 'pupil-card';
+          card.setAttribute('data-id', pupil.id);
+
+          card.innerHTML = `
+            <div class="pupil-card-top">
+              <div class="pupil-avatar">${pupil.avatar}</div>
+              <div class="pupil-identity">
+                <div class="pupil-name">${pupil.name}</div>
+                <div class="pupil-meta-row">
+                  <span class="pupil-level-tag">${pupil.level}</span>
+                  <span class="pupil-last-read">📅 Dernier récit : ${pupil.lastRead}</span>
+                  <span class="activity-tag ${pupil.active ? 'active' : 'inactive'}">
+                    <span class="activity-dot"></span>
+                    <span>${pupil.active ? 'Actif cette semaine' : 'Inactif'}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pupil-card-stats">
+              <div class="pupil-stat-cell">
+                <div class="pupil-stat-val">${pupil.storiesRead}</div>
+                <div class="pupil-stat-label">Récits lus</div>
+              </div>
+              <div class="pupil-stat-cell">
+                <div class="pupil-stat-val">${pupil.listenMin} min</div>
+                <div class="pupil-stat-label">Écoute totale</div>
+              </div>
+              <div class="score-progress-wrap">
+                <div class="score-bar-text">${pupil.avgScore > 0 ? `Score moyen : ${pupil.avgScore}/10` : 'Pas encore de quiz'}</div>
+                <div class="score-bar-bg">
+                  <div class="score-bar-fill ${sc}" style="width:${pct}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pupil-card-actions">
+              <button type="button" class="btn-teacher-secondary btn-see-detail"
+                      data-id="${pupil.id}">
+                <span>🔍</span>
+                <span>Voir détails</span>
+              </button>
+              <a href="dashboard-eleve.html" class="btn-teacher-secondary" style="font-size:12.5px;" title="Ouvrir l'espace élève">
+                <span>📚</span>
+                <span>Espace élève</span>
+              </a>
+            </div>
+          `;
+
+          list.appendChild(card);
+        });
+
+        // Attacher les écouteurs boutons "Voir détails"
+        document.querySelectorAll('.btn-see-detail').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = parseInt(btn.getAttribute('data-id'), 10);
+            openPupilDetail(id);
+          });
+        });
+      }
+
+      /* ─────────────── MODAL DÉTAIL ÉLÈVE (PRD 3.10) ─────────────────── */
+      function openPupilDetail(id) {
+        const pupil  = CLASS_PUPILS.find(p => p.id === id);
+        if (!pupil) return;
+        openPupilId = id;
+
+        document.getElementById('modal-student-avatar').textContent = pupil.avatar;
+        document.getElementById('modal-student-name').textContent   = pupil.name;
+        document.getElementById('modal-student-sub').textContent    =
+          `${pupil.level} · Dernière lecture : ${pupil.lastRead} · ${pupil.storiesRead} récit${pupil.storiesRead > 1 ? 's' : ''} lu${pupil.storiesRead > 1 ? 's' : ''}`;
+
+        // Historique de lecture
+        const histContainer = document.getElementById('modal-history-container');
+        histContainer.innerHTML = '';
+        if (pupil.history.length === 0) {
+          histContainer.innerHTML = `<p style="font-family:var(--font-corps);padding:8px 0;color:var(--ink);opacity:.7;">Aucun récit lu pour l'instant.</p>`;
+        } else {
+          pupil.history.forEach(item => {
+            const sc = scoreClass(item.score);
+            const row = document.createElement('div');
+            row.className = 'modal-history-row';
+            row.innerHTML = `
+              <span class="modal-history-emoji">${item.emoji}</span>
+              <div class="modal-history-info">
+                <div class="modal-history-title">${item.title}</div>
+                <div class="modal-history-meta">📅 ${item.date}</div>
+              </div>
+              <span class="modal-history-score ${sc}">${item.score}/10 ${'⭐'.repeat(Math.round(item.score / 2))}</span>
+            `;
+            histContainer.appendChild(row);
+          });
+        }
+
+        // Analyse rapide
+        document.getElementById('modal-analysis-box').innerHTML = `💡 ${pupil.analysis}`;
+
+        document.getElementById('detail-modal-overlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        document.getElementById('detail-modal-overlay').classList.remove('open');
+        document.body.style.overflow = '';
+        openPupilId = null;
+      }
+
+      document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+      document.getElementById('detail-modal-overlay').addEventListener('click', e => {
+        if (e.target === document.getElementById('detail-modal-overlay')) closeModal();
+      });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+      /* ─────────────── FILTRES ──────────────────────────────────────── */
+      document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeFilter = pill.getAttribute('data-filter');
+          renderPupils();
+        });
+      });
+
+      /* ─────────────── STATS HÉRO ───────────────────────────────────── */
+      function renderHeroStats() {
+        const active  = CLASS_PUPILS.filter(p => p.active).length;
+        const stories = CLASS_PUPILS.reduce((sum, p) => sum + p.storiesRead, 0);
+        const scores  = CLASS_PUPILS.filter(p => p.avgScore > 0).map(p => p.avgScore);
+        const avg     = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '—';
+        const alerts  = CLASS_PUPILS.filter(p => !p.active || p.avgScore < 6).length;
+
+        document.getElementById('chip-active').textContent  = active;
+        document.getElementById('chip-stories').textContent = stories;
+        document.getElementById('chip-avg').textContent     = avg;
+        document.getElementById('chip-alert').textContent   = alerts;
+        document.getElementById('class-hero-sub').textContent =
+          `Semaine du 23 au 27 septembre 2026 · ${CLASS_PUPILS.length} élèves inscrits`;
+      }
+
+      /* ─────────────── DÉCONNEXION ──────────────────────────────────── */
+      document.getElementById('btn-logout-teacher').addEventListener('click', () => {
+        try { localStorage.removeItem('lis_ecoute_session'); } catch(e) {}
+        window.location.href = 'index.html';
+      });
+
+      /* ─────────────── INIT ─────────────────────────────────────────── */
+      loadTeacherInfo();
+      renderHeroStats();
+      renderPupils();
+
+    })();
+  </script>
+</body>
+</html>

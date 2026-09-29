@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Quiz de Compréhension — Koffi au marché d'Abidjan — Lis & Écoute</title>
+  <meta name="description" content="Questionnaire de compréhension de lecture pour enfants de 6 à 12 ans avec feedback bienveillant et score sur 10.">
+
+  <!-- Polices officielles de la marque : Baloo 2, Zilla Slab, Work Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE : PALETTE TISSUS ET TERRE
+       - Fond principal : #F7EFDA (cream)
+       - Fond secondaire / cartes : #ECD9B4 (millet) & #FFFFFF
+       - Texte principal : #2B2018 (ink)
+       - Titres & Pédagogie : #234B5E (indigo)
+       - Accent chaud : #C1652B (terracotta)
+       - Bouton principal & Highlight : #E8A23B (saffron / mangue)
+       - Réussite / Quiz : #5B8C51 (feuille verte)
+       ========================================================================== */
+    :root {
+      --cream: #F7EFDA;
+      --millet: #ECD9B4;
+      --millet-light: #FBF6EB;
+      --millet-border: #D8C296;
+      --white: #FFFFFF;
+      --ink: #2B2018;
+      --indigo: #234B5E;
+      --terracotta: #C1652B;
+      --saffron: #E8A23B;
+      --saffron-light: #FEF4E2;
+      --leaf: #5B8C51;
+      --leaf-light: #EBF3EA;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui: 'Work Sans', sans-serif;
+
+      --rayon-carte: 18px;
+      --rayon-bouton: 14px;
+      --rayon-pilule: 30px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Wave motif décoratif */
+    .wave-svg {
+      display: block;
+      width: 100%;
+      height: 24px;
+      background: var(--cream);
+    }
+
+    /* En-tête de navigation */
+    .quiz-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .btn-back-reader {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--white);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      box-shadow: 2px 2px 0px var(--ink);
+      text-decoration: none;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn-back-reader:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    .brand-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .brand-mini-badge {
+      width: 36px;
+      height: 36px;
+      background-color: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+    .brand-mini-title {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .brand-mini-title span {
+      color: var(--terracotta);
+    }
+
+    .student-badge-pill {
+      background-color: var(--millet);
+      border: 1.5px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 4px 12px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Carte de titre et de progression */
+    .quiz-meta-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 16px 20px;
+      margin: 18px 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    @media (min-width: 600px) {
+      .quiz-meta-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .kolo-mascot-icon {
+      width: 50px;
+      height: 50px;
+      background-color: var(--leaf);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 2px 2px 0px var(--ink);
+      flex-shrink: 0;
+    }
+    .quiz-h1 {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.2;
+    }
+    .quiz-sub {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--terracotta);
+      font-weight: 600;
+    }
+
+    /* Indicateur d'avancement des questions (1 à 5) */
+    .quiz-progress-bar-wrap {
+      min-width: 170px;
+    }
+    .quiz-progress-label {
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--indigo);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background-color: var(--millet);
+      border: 1.5px solid var(--ink);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .progress-fill-bar {
+      height: 100%;
+      width: 20%;
+      background-color: var(--saffron);
+      border-right: 1.5px solid var(--ink);
+      transition: width 0.25s ease;
+    }
+
+    /* ==========================================================================
+       CARTE DE LA QUESTION ACTIVE
+       ========================================================================== */
+    .question-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 5px 5px 0px var(--ink);
+      padding: 24px 20px 28px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    @media (min-width: 600px) {
+      .question-card {
+        padding: 32px 30px;
+      }
+    }
+
+    .question-num-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--saffron-light);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--ink);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .question-title {
+      font-family: var(--font-titre);
+      font-size: clamp(21px, 4.5vw, 26px);
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.35;
+      margin-bottom: 22px;
+    }
+
+    /* Liste des options QCM */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .option-btn {
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 14px 18px;
+      font-family: var(--font-corps);
+      font-size: 18.5px;
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      box-shadow: 3px 3px 0px var(--ink);
+      text-align: left;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.12s ease;
+      position: relative;
+      user-select: none;
+    }
+    .option-btn:hover:not(.locked) {
+      background-color: var(--millet-light);
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px var(--ink);
+    }
+    .option-btn:active:not(.locked) {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    /* Option sélectionnée (avant validation) */
+    .option-btn.selected {
+      background-color: var(--saffron-light);
+      border-color: var(--indigo);
+      box-shadow: 3px 3px 0px var(--indigo);
+    }
+
+    /* Lettre badge A, B, C */
+    .option-letter {
+      width: 32px;
+      height: 32px;
+      background-color: var(--millet);
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--indigo);
+      flex-shrink: 0;
+    }
+    .option-btn.selected .option-letter {
+      background-color: var(--saffron);
+      color: var(--ink);
+    }
+
+    /* États après validation */
+    .option-btn.correct {
+      background-color: var(--leaf-light) !important;
+      border-color: var(--leaf) !important;
+      color: #1E461A !important;
+      font-weight: 700;
+    }
+    .option-btn.correct .option-letter {
+      background-color: var(--leaf);
+      color: #FFFFFF;
+      border-color: var(--leaf);
+    }
+
+    .option-btn.wrong {
+      background-color: #FDF0EC !important;
+      border-color: var(--terracotta) !important;
+      color: #7A2E07 !important;
+      opacity: 0.85;
+    }
+    .option-btn.wrong .option-letter {
+      background-color: var(--terracotta);
+      color: #FFFFFF;
+      border-color: var(--terracotta);
+    }
+
+    /* Cadre d'explication pédagogique bienveillante */
+    .feedback-box {
+      display: none;
+      background-color: var(--millet-light);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      box-shadow: 3px 3px 0px var(--ink);
+      animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback-box.correct {
+      background-color: var(--leaf-light);
+      border-color: var(--leaf);
+    }
+    .feedback-box.wrong {
+      background-color: #FDF0EC;
+      border-color: var(--terracotta);
+    }
+    .feedback-header {
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .feedback-box.correct .feedback-header {
+      color: var(--leaf);
+    }
+    .feedback-box.wrong .feedback-header {
+      color: var(--terracotta);
+    }
+    .feedback-text {
+      font-family: var(--font-corps);
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    /* Bouton d'action pour la question (Valider / Question suivante) */
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .btn-action-quiz {
+      background-color: var(--saffron);
+      color: var(--ink);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 14px 28px;
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3.5px 3.5px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.1s ease;
+      user-select: none;
+    }
+    .btn-action-quiz:hover:not(:disabled) {
+      background-color: #DE952B;
+    }
+    .btn-action-quiz:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+    .btn-action-quiz:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+
+    /* ==========================================================================
+       ÉCRAN DE RÉSULTAT FINAL (SCORE SUR 10 & ENCOURAGEMENTS)
+       ========================================================================== */
+    .result-screen-card {
+      display: none;
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 6px 6px 0px var(--ink);
+      padding: 32px 24px 36px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      animation: popUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+    @keyframes popUp {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .result-trophy {
+      font-size: 56px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .result-title {
+      font-family: var(--font-titre);
+      font-size: clamp(26px, 5.5vw, 34px);
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 8px;
+    }
+
+    /* Affichage des étoiles gagnées */
+    .stars-display-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      font-size: 32px;
+      margin-bottom: 14px;
+    }
+    .star-icon {
+      filter: drop-shadow(2px 2px 0px var(--ink));
+    }
+    .star-icon.empty {
+      opacity: 0.3;
+      filter: grayscale(1);
+    }
+
+    /* Badge de Score sur 10 */
+    .score-badge-circle {
+      display: inline-block;
+      background-color: var(--saffron-light);
+      border: 2.5px solid var(--ink);
+      border-radius: 20px;
+      padding: 10px 24px;
+      box-shadow: 3px 3px 0px var(--ink);
+      margin-bottom: 16px;
+    }
+    .score-number {
+      font-family: var(--font-titre);
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .score-label {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .result-message-p {
+      font-family: var(--font-corps);
+      font-size: 18.5px;
+      color: var(--ink);
+      max-width: 540px;
+      margin: 0 auto 26px;
+      line-height: 1.5;
+    }
+
+    /* Boutons de redirection conditionnels */
+    .result-buttons-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (min-width: 550px) {
+      .result-buttons-wrap {
+        flex-direction: row;
+      }
+    }
+
+    .btn-return-library {
+      background-color: var(--leaf);
+      color: #FFFFFF;
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 14px 26px;
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 3.5px 3.5px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.1s ease;
+      cursor: pointer;
+    }
+    .btn-return-library:hover {
+      background-color: #4C7744;
+    }
+    .btn-return-library:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+
+    .btn-retry-quiz {
+      background-color: var(--saffron);
+      color: var(--ink);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 14px 26px;
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 3.5px 3.5px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      cursor: pointer;
+    }
+    .btn-retry-quiz:hover {
+      background-color: #DE952B;
+    }
+    .btn-retry-quiz:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+
+    .btn-relisten-story {
+      background-color: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 13px 20px;
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 3px 3px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.08s ease;
+    }
+    .btn-relisten-story:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--cream);
+      padding: 20px 0;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: auto;
+    }
+    .site-footer a {
+      color: var(--indigo);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Motif signature en haut -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- En-tête de navigation -->
+  <header class="quiz-header">
+    <div class="container header-inner">
+      <a href="lecteur-karaoke.html" class="btn-back-reader" title="Retourner lire l'histoire">
+        <span>←</span>
+        <span>Relire le texte</span>
+      </a>
+
+      <a href="dashboard-eleve.html" class="brand-mini" aria-label="Lis & Écoute">
+        <div class="brand-mini-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F7EFDA" stroke-width="2.3">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="brand-mini-title">Lis <span>&</span> Écoute</div>
+      </a>
+
+      <div class="student-badge-pill" id="student-badge-pill">
+        <span>🎒</span>
+        <span id="student-name-val">Élève</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenu Principal -->
+  <main class="container">
+
+    <!-- 1. En-tête du Quiz -->
+    <section class="quiz-meta-card">
+      <div class="meta-left">
+        <div class="kolo-mascot-icon" title="Kolo t'encourage !">🦎</div>
+        <div>
+          <h1 class="quiz-h1">Le Quiz de Koffi</h1>
+          <div class="quiz-sub">5 questions • Gagne jusqu'à 10 points !</div>
+        </div>
+      </div>
+
+      <!-- Jauge d'avancement -->
+      <div class="quiz-progress-bar-wrap">
+        <div class="quiz-progress-label">
+          <span id="progress-question-text">Question 1 sur 5</span>
+          <span id="progress-percent-text">20%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill-bar" id="progress-fill-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Zone de la Question Active -->
+    <section class="question-card" id="question-card">
+      <div class="question-num-tag" id="question-badge">Question 1 / 5</div>
+      <h2 class="question-title" id="question-title-text">Chargement de la question...</h2>
+
+      <!-- 3 Propositions de réponses -->
+      <div class="options-list" id="options-container" role="radiogroup">
+        <!-- Généré dynamiquement -->
+      </div>
+
+      <!-- Explication pédagogique bienveillante après réponse -->
+      <div class="feedback-box" id="feedback-box">
+        <div class="feedback-header">
+          <span id="feedback-icon">🎉</span>
+          <span id="feedback-title">Bravo !</span>
+        </div>
+        <p class="feedback-text" id="feedback-text">Explication pédagogique.</p>
+      </div>
+
+      <!-- Bouton d'action -->
+      <div class="action-row">
+        <button type="button" class="btn-action-quiz" id="btn-submit-answer" disabled>
+          <span id="btn-action-text">Valider ma réponse</span>
+          <span>✓</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. Écran de Résultat Final (affiché à la fin) -->
+    <section class="result-screen-card" id="result-screen-card">
+      <div class="result-trophy" id="result-trophy-emoji">🏆</div>
+      <h2 class="result-title" id="result-headline">Félicitations !</h2>
+
+      <!-- Étoiles gagnées -->
+      <div class="stars-display-row" id="stars-row">
+        <!-- Étoiles injectées dynamiquement -->
+      </div>
+
+      <!-- Badge de score sur 10 -->
+      <div class="score-badge-circle">
+        <div class="score-number" id="final-score-val">10 / 10</div>
+        <div class="score-label">Score de compréhension</div>
+      </div>
+
+      <p class="result-message-p" id="result-encouragement-p">
+        Tu as répondu à toutes les questions comme un vrai champion !
+      </p>
+
+      <!-- Boutons d'action conditionnels selon score >= 7 ou < 7 -->
+      <div class="result-buttons-wrap" id="result-buttons-wrap">
+        <!-- Généré dynamiquement selon score -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Motif signature en bas -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none" style="transform:scaleY(-1)">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#5B8C51" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin-bottom: 4px;">
+        © 2026 Lis & Écoute — Le livre à l'oreille, le mot à la bouche.
+      </p>
+      <p>
+        <a href="dashboard-eleve.html">Mon espace lecture</a> • <a href="lecteur-karaoke.html">Relire l'histoire</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       LOGIQUE JAVASCRIPT DU QUIZ (PRD 3.14 & F9-F12)
+       ========================================================================== */ -->
+  <script>
+    (function() {
+      'use strict';
+
+      // 1. Profil élève
+      let studentName = 'Élève';
+      try {
+        const sessionData = JSON.parse(localStorage.getItem('lis_ecoute_session') || '{}');
+        if (sessionData && sessionData.eleveName) {
+          studentName = sessionData.eleveName;
+          const nameEl = document.getElementById('student-name-val');
+          if (nameEl) nameEl.textContent = studentName;
+        }
+      } catch(e) {}
+
+      // 2. Données des 5 questions calibrées pour "Koffi au marché d'Abidjan"
+      // Chaque question vaut 2 points -> Total sur 10 points
+      const quizQuestions = [
+        {
+          id: 1,
+          question: "Où vont Koffi et sa maman ce matin ?",
+          options: [
+            "À l'école primaire",
+            "Au grand marché d'Adjamé",
+            "À la plage de Grand-Bassam"
+          ],
+          correctIndex: 1,
+          explanation: "Ce matin, Koffi et sa maman partent faire des courses au grand marché d'Adjamé sous le soleil d'Abidjan."
+        },
+        {
+          id: 2,
+          question: "De quelle couleur sont les taxis qui klaxonnent dans les rues ?",
+          options: [
+            "Ils sont tout verts",
+            "Ils sont tout jaunes",
+            "Ils sont tout rouges"
+          ],
+          correctIndex: 2,
+          explanation: "Ce sont les fameux taxis rouges d'Abidjan qui klaxonnent gaiement dans la ville !"
+        },
+        {
+          id: 3,
+          question: "Quels fruits mûrs Koffi regarde-t-il sur les étals ?",
+          options: [
+            "Des mangues bien mûres",
+            "Des pommes de France",
+            "Des fraises des bois"
+          ],
+          correctIndex: 0,
+          explanation: "Koffi admire les gros régimes de bananes et les belles mangues parfumées et bien mûres."
+        },
+        {
+          id: 4,
+          question: "Quelle bonne odeur chatouille le nez de Koffi et lui donne faim ?",
+          options: [
+            "L'odeur du pain au chocolat",
+            "L'odeur du poisson braisé",
+            "L'odeur des beignets au sucre"
+          ],
+          correctIndex: 1,
+          explanation: "L'odeur appétissante du poisson braisé sur le charbon chaud donne très faim à Koffi dans les allées."
+        },
+        {
+          id: 5,
+          question: "Quel beau cadeau le marchand offre-t-il à Koffi avec un grand sourire ?",
+          options: [
+            "Un petit ballon de foot",
+            "Un paquet de bonbons",
+            "Une belle orange sucrée"
+          ],
+          correctIndex: 2,
+          explanation: "Le vieux marchand sourit et tend gentiment une belle orange juteuse pour remercier Koffi."
+        }
+      ];
+
+      // Éléments du DOM
+      const questionCard = document.getElementById('question-card');
+      const questionBadge = document.getElementById('question-badge');
+      const questionTitle = document.getElementById('question-title-text');
+      const optionsContainer = document.getElementById('options-container');
+      const feedbackBox = document.getElementById('feedback-box');
+      const feedbackIcon = document.getElementById('feedback-icon');
+      const feedbackTitle = document.getElementById('feedback-title');
+      const feedbackText = document.getElementById('feedback-text');
+      const btnSubmitAnswer = document.getElementById('btn-submit-answer');
+      const btnActionText = document.getElementById('btn-action-text');
+
+      const progressQuestionText = document.getElementById('progress-question-text');
+      const progressPercentText = document.getElementById('progress-percent-text');
+      const progressFillBar = document.getElementById('progress-fill-bar');
+
+      const resultScreenCard = document.getElementById('result-screen-card');
+      const resultTrophyEmoji = document.getElementById('result-trophy-emoji');
+      const resultHeadline = document.getElementById('result-headline');
+      const starsRow = document.getElementById('stars-row');
+      const finalScoreVal = document.getElementById('final-score-val');
+      const resultEncouragementP = document.getElementById('result-encouragement-p');
+      const resultButtonsWrap = document.getElementById('result-buttons-wrap');
+
+      // État du quiz
+      let currentQuestionIdx = 0;
+      let selectedOptionIdx = null;
+      let isAnswerValidated = false;
+      let correctAnswersCount = 0;
+
+      // Afficher une question
+      function displayQuestion(idx) {
+        const qData = quizQuestions[idx];
+        selectedOptionIdx = null;
+        isAnswerValidated = false;
+
+        // Mise à jour de la jauge
+        const progressPercent = Math.round(((idx + 1) / quizQuestions.length) * 100);
+        progressQuestionText.textContent = `Question ${idx + 1} sur ${quizQuestions.length}`;
+        progressPercentText.textContent = `${progressPercent}%`;
+        progressFillBar.style.width = `${progressPercent}%`;
+
+        // Mise à jour de la carte
+        questionBadge.textContent = `Question ${idx + 1} / ${quizQuestions.length}`;
+        questionTitle.textContent = qData.question;
+        feedbackBox.style.display = 'none';
+
+        btnSubmitAnswer.disabled = true;
+        btnActionText.textContent = "Valider ma réponse";
+
+        // Génération des 3 options avec lettres A, B, C
+        optionsContainer.innerHTML = '';
+        const letters = ['A', 'B', 'C'];
+
+        qData.options.forEach((optText, i) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'option-btn';
+          btn.setAttribute('role', 'radio');
+          btn.setAttribute('aria-checked', 'false');
+
+          btn.innerHTML = `
+            <span class="option-letter">${letters[i]}</span>
+            <span>${optText}</span>
+          `;
+
+          btn.addEventListener('click', () => {
+            if (isAnswerValidated) return;
+            selectOption(i);
+          });
+
+          optionsContainer.appendChild(btn);
+        });
+      }
+
+      // Sélection d'une proposition par l'enfant
+      function selectOption(index) {
+        selectedOptionIdx = index;
+        const allButtons = optionsContainer.querySelectorAll('.option-btn');
+
+        allButtons.forEach((btn, i) => {
+          if (i === index) {
+            btn.classList.add('selected');
+            btn.setAttribute('aria-checked', 'true');
+          } else {
+            btn.classList.remove('selected');
+            btn.setAttribute('aria-checked', 'false');
+          }
+        });
+
+        btnSubmitAnswer.disabled = false;
+      }
+
+      // Validation de la réponse
+      function validateAnswer() {
+        if (selectedOptionIdx === null || isAnswerValidated) return;
+        isAnswerValidated = true;
+
+        const qData = quizQuestions[currentQuestionIdx];
+        const isCorrect = (selectedOptionIdx === qData.correctIndex);
+        const allButtons = optionsContainer.querySelectorAll('.option-btn');
+
+        allButtons.forEach((btn, i) => {
+          btn.classList.add('locked');
+          if (i === qData.correctIndex) {
+            btn.classList.add('correct');
+          } else if (i === selectedOptionIdx) {
+            btn.classList.add('wrong');
+          }
+        });
+
+        if (isCorrect) {
+          correctAnswersCount++;
+          feedbackBox.className = 'feedback-box correct';
+          feedbackIcon.textContent = '🌟';
+          feedbackTitle.textContent = 'Bravo ! C\'est la bonne réponse !';
+        } else {
+          feedbackBox.className = 'feedback-box wrong';
+          feedbackIcon.textContent = '💡';
+          feedbackTitle.textContent = 'Pas tout à fait, voici pourquoi :';
+        }
+
+        feedbackText.textContent = qData.explanation;
+        feedbackBox.style.display = 'block';
+
+        // Mettre à jour le bouton d'action pour la suite
+        if (currentQuestionIdx < quizQuestions.length - 1) {
+          btnActionText.textContent = "Question suivante →";
+        } else {
+          btnActionText.textContent = "Voir mon score final 🏆";
+        }
+      }
+
+      // Passer à la question suivante ou à l'écran de résultat
+      function nextStep() {
+        if (!isAnswerValidated) {
+          validateAnswer();
+        } else {
+          if (currentQuestionIdx < quizQuestions.length - 1) {
+            currentQuestionIdx++;
+            displayQuestion(currentQuestionIdx);
+          } else {
+            showFinalResults();
+          }
+        }
+      }
+
+      btnSubmitAnswer.addEventListener('click', nextStep);
+
+      // ==========================================================================
+      // ÉCRAN DE RÉSULTAT FINAL (SCORE SUR 10, ADAPTATION & REDIRECTION)
+      // ==========================================================================
+      function showFinalResults() {
+        questionCard.style.display = 'none';
+        resultScreenCard.style.display = 'block';
+
+        // Score calculé sur 10 (2 points par bonne réponse)
+        const finalScore = correctAnswersCount * 2;
+        finalScoreVal.textContent = `${finalScore} / 10`;
+
+        // Étoiles (1 étoile pour 2 points)
+        starsRow.innerHTML = '';
+        for (let s = 1; s <= 5; s++) {
+          const starSpan = document.createElement('span');
+          starSpan.className = (s <= correctAnswersCount) ? 'star-icon' : 'star-icon empty';
+          starSpan.textContent = '⭐';
+          starsRow.appendChild(starSpan);
+        }
+
+        // Sauvegarde de progression dans localStorage pour le profil élève
+        try {
+          const stats = JSON.parse(localStorage.getItem('lis_ecoute_stats') || '{"storiesRead": 4, "stars": 18}');
+          stats.stars = (stats.stars || 18) + (correctAnswersCount * 2);
+          if (finalScore >= 7) {
+            stats.storiesRead = (stats.storiesRead || 4) + 1;
+          }
+          localStorage.setItem('lis_ecoute_stats', JSON.stringify(stats));
+        } catch(e) {}
+
+        // Adaptation du message et des boutons selon score >= 7 ou < 7
+        if (finalScore >= 7) {
+          // SUCCÈS (Score 8/10 ou 10/10)
+          resultTrophyEmoji.textContent = '🏆';
+          resultHeadline.textContent = `Akwaba champion ${studentName} !`;
+
+          if (finalScore === 10) {
+            resultEncouragementP.textContent = "Exceptionnel ! Tu as obtenu 10 sur 10 ! Tu as tout compris de l'histoire de Koffi. Tes étoiles brillent fièrement !";
+          } else {
+            resultEncouragementP.textContent = `Très beau travail ! Tu obtiens un superbe score de ${finalScore}/10. Tu as une mémoire formidable !`;
+          }
+
+          resultButtonsWrap.innerHTML = `
+            <a href="dashboard-eleve.html" class="btn-return-library">
+              <span>Retour à la bibliothèque</span>
+              <span>📚</span>
+            </a>
+            <button type="button" class="btn-relisten-story" id="btn-restart-quiz-opt">
+              <span>Rejouer le quiz ↺</span>
+            </button>
+          `;
+
+          document.getElementById('btn-restart-quiz-opt').addEventListener('click', restartQuiz);
+
+        } else {
+          // BESOIN DE RENFORCEMENT (Score < 7)
+          resultTrophyEmoji.textContent = '🌱';
+          resultHeadline.textContent = `Bel effort ${studentName} !`;
+          resultEncouragementP.textContent = `Tu as obtenu ${finalScore}/10. Pour obtenir toutes tes étoiles et réussir le quiz, réécoute le récit avec Kolo ou réessaie tranquillement !`;
+
+          resultButtonsWrap.innerHTML = `
+            <button type="button" class="btn-retry-quiz" id="btn-restart-quiz">
+              <span>Recommencer le quiz</span>
+              <span>↺</span>
+            </button>
+            <a href="lecteur-karaoke.html" class="btn-relisten-story">
+              <span>Réécouter l'histoire 🎧</span>
+            </a>
+          `;
+
+          document.getElementById('btn-restart-quiz').addEventListener('click', restartQuiz);
+        }
+      }
+
+      function restartQuiz() {
+        currentQuestionIdx = 0;
+        correctAnswersCount = 0;
+        resultScreenCard.style.display = 'none';
+        questionCard.style.display = 'block';
+        displayQuestion(0);
+      }
+
+      // Démarrage initial
+      displayQuestion(0);
+
+    })();
+  </script>
+</body>
+</html>

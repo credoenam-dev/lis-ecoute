@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Koffi au marché d'Abidjan — Lecteur Karaoké — Lis & Écoute</title>
+  <meta name="description" content="Lecteur de lecture karaoké bimodal pour enfants avec synchronisation audio, surlignage mot par mot, contrôle de vitesse et réécoute interactive.">
+
+  <!-- Polices officielles de la marque : Baloo 2, Zilla Slab, Work Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE : PALETTE TISSUS ET TERRE
+       - Fond principal : #F7EFDA (cream)
+       - Fond secondaire / cartes : #ECD9B4 (millet) & #FFFFFF
+       - Texte principal : #2B2018 (ink)
+       - Titres & Pédagogie : #234B5E (indigo)
+       - Accent chaud : #C1652B (terracotta)
+       - Bouton principal & Highlight : #E8A23B (saffron / mangue)
+       - Réussite / Quiz : #5B8C51 (feuille verte)
+       ========================================================================== */
+    :root {
+      --cream: #F7EFDA;
+      --millet: #ECD9B4;
+      --millet-light: #FBF6EB;
+      --millet-border: #D8C296;
+      --white: #FFFFFF;
+      --ink: #2B2018;
+      --indigo: #234B5E;
+      --terracotta: #C1652B;
+      --saffron: #E8A23B;
+      --saffron-light: #FEF4E2;
+      --highlight-yellow: #FFE57F;
+      --leaf: #5B8C51;
+      --leaf-light: #EBF3EA;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui: 'Work Sans', sans-serif;
+
+      --rayon-carte: 18px;
+      --rayon-bouton: 14px;
+      --rayon-pilule: 30px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Wave motif décoratif */
+    .wave-svg {
+      display: block;
+      width: 100%;
+      height: 24px;
+      background: var(--cream);
+    }
+
+    /* En-tête de navigation du lecteur */
+    .player-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .btn-back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--white);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      box-shadow: 2px 2px 0px var(--ink);
+      text-decoration: none;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn-back-nav:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    .brand-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .brand-mini-badge {
+      width: 36px;
+      height: 36px;
+      background-color: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+    .brand-mini-title {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .brand-mini-title span {
+      color: var(--terracotta);
+    }
+
+    .student-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--millet);
+      border: 1.5px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 4px 12px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* Carte de titre du récit */
+    .story-meta-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 16px 20px;
+      margin: 18px 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    @media (min-width: 600px) {
+      .story-meta-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .story-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .story-cover-icon {
+      width: 52px;
+      height: 52px;
+      background-color: var(--millet);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 2px 2px 0px var(--ink);
+      flex-shrink: 0;
+    }
+    .story-h1 {
+      font-family: var(--font-titre);
+      font-size: clamp(22px, 4.5vw, 28px);
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.2;
+    }
+    .story-badges-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .badge-pill {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 9px;
+      border-radius: 12px;
+      border: 1px solid var(--ink);
+    }
+    .badge-level {
+      background-color: var(--indigo);
+      color: var(--cream);
+    }
+    .badge-time {
+      background-color: var(--saffron-light);
+      color: var(--ink);
+    }
+    .badge-page {
+      background-color: var(--leaf-light);
+      color: var(--leaf);
+    }
+
+    /* Cadre interactif d'astuce de Kolo */
+    .kolo-tip-banner {
+      background-color: var(--millet-light);
+      border: 2px dashed var(--millet-border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--indigo);
+    }
+    .kolo-tip-mascot {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       SCÈNE DE LECTURE KARAOKÉ (LE TEXTE INTERACTIF)
+       ========================================================================== */
+    .reader-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 5px 5px 0px var(--ink);
+      padding: 24px 20px 28px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    @media (min-width: 600px) {
+      .reader-card {
+        padding: 36px 36px 40px;
+      }
+    }
+
+    .reader-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--millet);
+      padding-bottom: 12px;
+      margin-bottom: 22px;
+    }
+    .reader-page-num {
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .reader-status-indicator {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--indigo);
+    }
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background-color: #A0A0A0;
+      transition: background-color 0.2s ease;
+    }
+    .status-dot.playing {
+      background-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(91, 140, 81, 0.25);
+    }
+
+    /* Zone de texte de lecture */
+    .story-text-container {
+      font-family: var(--font-corps);
+      font-size: clamp(21px, 4.2vw, 27px);
+      line-height: 2.1;
+      color: var(--ink);
+      word-spacing: 0.18em;
+      min-height: 160px;
+      scroll-behavior: smooth;
+    }
+
+    /* Mot individuel dans le karaoké */
+    .karaoke-word {
+      display: inline-block;
+      padding: 2px 5px;
+      margin: 2px 1px;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+      position: relative;
+    }
+
+    .karaoke-word:hover {
+      background-color: var(--millet);
+      transform: translateY(-1px);
+    }
+
+    /* Mot actif en cours de prononciation (JAUNE ÉCLATANT SELON CONSIGNE) */
+    .karaoke-word.active {
+      background-color: var(--highlight-yellow) !important;
+      color: #000000 !important;
+      font-weight: 700;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      box-shadow: 2px 2px 0px var(--ink);
+      transform: scale(1.05);
+      z-index: 5;
+    }
+
+    /* Mots déjà prononcés */
+    .karaoke-word.past {
+      color: var(--ink);
+      background-color: rgba(236, 217, 180, 0.35);
+    }
+
+    /* Bulle d'explication de Kolo au clic sur un mot */
+    .kolo-word-popup {
+      display: none;
+      background-color: var(--saffron-light);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-top: 20px;
+      box-shadow: 3px 3px 0px var(--ink);
+      animation: popIn 0.2s ease-out;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .kolo-popup-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .kolo-popup-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .kolo-popup-mascot {
+      font-size: 28px;
+    }
+    .kolo-popup-word {
+      font-family: var(--font-titre);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
+    }
+    .kolo-popup-syllables {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--terracotta);
+      letter-spacing: 0.05em;
+    }
+    .btn-replay-word {
+      background-color: var(--saffron);
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 6px 14px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+    .btn-replay-word:active {
+      transform: translate(1px, 1px);
+      box-shadow: 0 0 0;
+    }
+
+    /* ==========================================================================
+       CONTRÔLES AUDIO & PUPITRE DE COMMANDE (PRD F5)
+       ========================================================================== */
+    .audio-controls-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 5px 5px 0px var(--ink);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* Barre de progression du récit */
+    .progress-wrap {
+      margin-bottom: 18px;
+    }
+    .progress-time-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--indigo);
+      margin-bottom: 6px;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 12px;
+      background-color: var(--millet);
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--saffron);
+      border-right: 2px solid var(--ink);
+      transition: width 0.1s linear;
+    }
+
+    /* Boutons de commande principaux */
+    .main-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    /* Bouton principal Pause / Reprendre */
+    .btn-primary-play {
+      background-color: var(--saffron);
+      color: var(--ink);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 14px 28px;
+      font-family: var(--font-titre);
+      font-size: 19px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3.5px 3.5px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.1s ease;
+      min-width: 220px;
+      justify-content: center;
+    }
+    .btn-primary-play:hover {
+      background-color: #DE952B;
+    }
+    .btn-primary-play:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+    .btn-primary-play.playing {
+      background-color: var(--millet);
+    }
+
+    /* Bouton Retour au début */
+    .btn-restart {
+      background-color: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 13px 20px;
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3px 3px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn-restart:hover {
+      background-color: var(--millet-light);
+    }
+    .btn-restart:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    /* ==========================================================================
+       SÉLECTEUR DE VITESSE (PRD F7) : Lente (0.7x) / Normale (1x) / Rapide (1.3x)
+       ========================================================================== */
+    .speed-selector-section {
+      background-color: var(--millet-light);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    @media (min-width: 600px) {
+      .speed-selector-section {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .speed-label {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--indigo);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .speed-pills-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .speed-pill-btn {
+      flex: 1;
+      background-color: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-pilule);
+      padding: 7px 14px;
+      font-family: var(--font-titre);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--ink);
+      transition: all 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .speed-pill-btn:hover {
+      background-color: var(--millet);
+    }
+    .speed-pill-btn.active {
+      background-color: var(--indigo);
+      color: var(--cream);
+      box-shadow: 2.5px 2.5px 0px var(--ink);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       PAGINATION PRÉCÉDENT / SUIVANT (PRD F8)
+       ========================================================================== */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .btn-page-nav {
+      background-color: var(--white);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 12px 18px;
+      font-family: var(--font-titre);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3px 3px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      flex: 1;
+      justify-content: center;
+      max-width: 220px;
+    }
+    .btn-page-nav:hover:not(:disabled) {
+      background-color: var(--millet);
+    }
+    .btn-page-nav:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+    .btn-page-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    .page-indicator-badge {
+      font-family: var(--font-titre);
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--indigo);
+      background-color: var(--millet);
+      padding: 8px 16px;
+      border-radius: var(--rayon-pilule);
+      border: 1.5px solid var(--ink);
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       BOUTON DU QUIZ (PRD F9-F12)
+       ========================================================================== */
+    .quiz-cta-card {
+      background: linear-gradient(135deg, var(--leaf-light) 0%, #D8EAD4 100%);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: center;
+      margin-bottom: 30px;
+      align-items: center;
+    }
+    @media (min-width: 600px) {
+      .quiz-cta-card {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+    .quiz-cta-text h3 {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 2px;
+    }
+    .quiz-cta-text p {
+      font-family: var(--font-corps);
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    .btn-go-quiz {
+      background-color: var(--leaf);
+      color: #FFFFFF;
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-bouton);
+      padding: 14px 26px;
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 3.5px 3.5px 0px var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.1s ease;
+      cursor: pointer;
+    }
+    .btn-go-quiz:hover {
+      background-color: #4C7744;
+    }
+    .btn-go-quiz:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--cream);
+      padding: 20px 0;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: auto;
+    }
+    .site-footer a {
+      color: var(--indigo);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Motif signature en haut -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- En-tête de navigation -->
+  <header class="player-header">
+    <div class="container header-inner">
+      <a href="dashboard-eleve.html" class="btn-back-nav" title="Retour à mon espace lecture">
+        <span>←</span>
+        <span>Mes histoires</span>
+      </a>
+
+      <a href="dashboard-eleve.html" class="brand-mini" aria-label="Lis & Écoute">
+        <div class="brand-mini-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F7EFDA" stroke-width="2.3">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="brand-mini-title">Lis <span>&</span> Écoute</div>
+      </a>
+
+      <div class="student-tag" id="student-tag-display">
+        <span>🎒</span>
+        <span id="student-name-val">Élève</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenu Principal -->
+  <main class="container">
+
+    <!-- 1. En-tête du récit sélectionné -->
+    <section class="story-meta-card">
+      <div class="story-meta-left">
+        <div class="story-cover-icon" title="Au marché d'Abidjan">🛒</div>
+        <div>
+          <h1 class="story-h1">Koffi au marché d'Abidjan</h1>
+          <div class="story-badges-row">
+            <span class="badge-pill badge-level">Niveau CE1</span>
+            <span class="badge-pill badge-time">⏱️ 2 min de lecture</span>
+            <span class="badge-pill badge-page" id="header-page-badge">Page 1 sur 2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kolo-tip-banner">
+        <span class="kolo-tip-mascot">🦎</span>
+        <span>Kolo : « Écoute et regarde bien chaque mot ! Clique sur un mot pour le réécouter. »</span>
+      </div>
+    </section>
+
+    <!-- 2. Scène de lecture karaoké mot par mot (PRD F4, F6) -->
+    <section class="reader-card">
+      <div class="reader-page-header">
+        <div class="reader-page-num" id="current-page-title">Page 1 — Le grand départ</div>
+        <div class="reader-status-indicator">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">Prêt à écouter</span>
+        </div>
+      </div>
+
+      <!-- Le conteneur de texte où les mots sont injectés dynamiquement -->
+      <div class="story-text-container" id="story-text-container" aria-live="polite">
+        <!-- Rendu mot par mot avec span.karaoke-word -->
+      </div>
+
+      <!-- Bulle d'explication et réécoute au clic sur un mot -->
+      <div class="kolo-word-popup" id="kolo-word-popup">
+        <div class="kolo-popup-content">
+          <div class="kolo-popup-left">
+            <span class="kolo-popup-mascot">🦎</span>
+            <div>
+              <div class="kolo-popup-word" id="popup-word-text">marché</div>
+              <div class="kolo-popup-syllables" id="popup-syllables-text">Syllabes : mar — ché</div>
+            </div>
+          </div>
+          <button type="button" class="btn-replay-word" id="btn-replay-from-word">
+            <span>▶ Réécouter à partir d'ici</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Pupitre de commandes audio & Vitesse (PRD F5, F7) -->
+    <section class="audio-controls-card">
+      
+      <!-- Barre de progression de la page -->
+      <div class="progress-wrap">
+        <div class="progress-time-row">
+          <span id="time-current">0:00</span>
+          <span>Barre de lecture</span>
+          <span id="time-total">0:14</span>
+        </div>
+        <div class="progress-bar-bg" id="progress-bar-bg" title="Cliquer pour avancer ou reculer">
+          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- Boutons de commande principaux -->
+      <div class="main-controls-row">
+        <button type="button" class="btn-restart" id="btn-restart" title="Recommencer cette page">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          <span>Retour au début</span>
+        </button>
+
+        <button type="button" class="btn-primary-play" id="btn-primary-play">
+          <span id="play-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+          <span id="play-text">Écouter l'histoire</span>
+        </button>
+      </div>
+
+      <!-- Sélecteur de vitesse F7 : Lente (0.7x) / Normale (1x) / Rapide (1.3x) -->
+      <div class="speed-selector-section">
+        <div class="speed-label">
+          <span>⚡</span>
+          <span>Vitesse de lecture :</span>
+        </div>
+        <div class="speed-pills-wrap" role="group" aria-label="Vitesse de lecture">
+          <button type="button" class="speed-pill-btn" data-speed="0.7">
+            <span>🐢</span>
+            <span>Lente (0.7x)</span>
+          </button>
+          <button type="button" class="speed-pill-btn active" data-speed="1.0">
+            <span>🚶</span>
+            <span>Normale (1x)</span>
+          </button>
+          <button type="button" class="speed-pill-btn" data-speed="1.3">
+            <span>🐆</span>
+            <span>Rapide (1.3x)</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 4. Pagination Précédent / Suivant (PRD F8) -->
+    <section class="pagination-bar">
+      <button type="button" class="btn-page-nav" id="btn-prev-page" disabled>
+        <span>←</span>
+        <span>Page précédente</span>
+      </button>
+
+      <div class="page-indicator-badge" id="page-indicator-badge">Page 1 / 2</div>
+
+      <button type="button" class="btn-page-nav" id="btn-next-page">
+        <span>Page suivante</span>
+        <span>→</span>
+      </button>
+    </section>
+
+    <!-- 5. Bloc de passage au quiz (PRD F9-F12) -->
+    <section class="quiz-cta-card">
+      <div class="quiz-cta-text">
+        <h3>Tu as bien écouté et lu l'histoire ?</h3>
+        <p>Réponds maintenant aux questions de Maître Yao pour gagner tes étoiles !</p>
+      </div>
+      <a href="questionnaire.html" class="btn-go-quiz" id="btn-go-quiz">
+        <span>J'ai fini, je passe au quiz !</span>
+        <span>🎯</span>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- Motif signature en bas -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none" style="transform:scaleY(-1)">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#5B8C51" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin-bottom: 4px;">
+        © 2026 Lis & Écoute — Le livre à l'oreille, le mot à la bouche.
+      </p>
+      <p>
+        <a href="dashboard-eleve.html">Mon espace élève</a> • <a href="index.html">Accueil</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       LOGIQUE JAVASCRIPT DU LECTEUR KARAOKÉ (F4 à F8)
+       ========================================================================== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // 1. Récupération de la session élève
+      try {
+        const sessionData = JSON.parse(localStorage.getItem('lis_ecoute_session') || '{}');
+        const nameEl = document.getElementById('student-name-val');
+        if (sessionData && sessionData.eleveName && nameEl) {
+          nameEl.textContent = sessionData.eleveName;
+        }
+      } catch(e) {}
+
+      // 2. Données découpées mot par mot pour le récit "Koffi au marché d'Abidjan"
+      // Découpé en 2 pages pour tester la pagination F8 et le confort enfantin
+      const storyPages = [
+        {
+          title: "Page 1 — Le grand départ",
+          totalDuration: 14.0,
+          words: [
+            { word: "Ce", start: 0.0, end: 0.45, syl: "Ce", def: "Désigne ce jour-ci" },
+            { word: "matin,", start: 0.45, end: 1.05, syl: "ma — tin", def: "Le début de la journée" },
+            { word: "Koffi", start: 1.05, end: 1.70, syl: "Kof — fi", def: "Le prénom du petit garçon" },
+            { word: "et", start: 1.70, end: 2.05, syl: "et", def: "Mot de liaison" },
+            { word: "sa", start: 2.05, end: 2.45, syl: "sa", def: "Possessif" },
+            { word: "maman", start: 2.45, end: 3.15, syl: "ma — man", def: "La mère de famille" },
+            { word: "vont", start: 3.15, end: 3.65, syl: "vont", def: "Se déplacer vers un lieu" },
+            { word: "au", start: 3.65, end: 3.95, syl: "au", def: "Vers le" },
+            { word: "grand", start: 3.95, end: 4.55, syl: "grand", def: "De taille importante" },
+            { word: "marché", start: 4.55, end: 5.25, syl: "mar — ché", def: "Le lieu où l'on achète les vivres" },
+            { word: "d'Adjamé.", start: 5.25, end: 6.20, syl: "d'Ad — ja — mé", def: "Célèbre commune d'Abidjan" },
+            { word: "Le", start: 6.30, end: 6.65, syl: "Le", def: "Article défini" },
+            { word: "soleil", start: 6.65, end: 7.30, syl: "so — leil", def: "L'astre lumineux du ciel" },
+            { word: "brille", start: 7.30, end: 7.95, syl: "bril — le", def: "Qui diffuse beaucoup de lumière" },
+            { word: "déjà", start: 7.95, end: 8.55, syl: "dé — jà", def: "Plus tôt que prévu" },
+            { word: "sur", start: 8.55, end: 8.90, syl: "sur", def: "Au-dessus de" },
+            { word: "les", start: 8.90, end: 9.25, syl: "les", def: "Article pluriel" },
+            { word: "toits", start: 9.25, end: 9.75, syl: "toits", def: "Le haut des maisons" },
+            { word: "d'Abidjan.", start: 9.75, end: 10.75, syl: "d'A — bid — jan", def: "La grande ville ivoirienne" },
+            { word: "Partout,", start: 10.90, end: 11.60, syl: "Par — tout", def: "En tous lieux" },
+            { word: "les", start: 11.60, end: 11.95, syl: "les", def: "Article pluriel" },
+            { word: "taxis", start: 11.95, end: 12.55, syl: "ta — xis", def: "Les voitures communales" },
+            { word: "rouges", start: 12.55, end: 13.15, syl: "rou — ges", def: "La couleur des taxis de Cocody" },
+            { word: "klaxonnent.", start: 13.15, end: 14.00, syl: "klax — on — nent", def: "Font retentir leur avertisseur sonore" }
+          ]
+        },
+        {
+          title: "Page 2 — Les étals parfumés",
+          totalDuration: 15.5,
+          words: [
+            { word: "Dans", start: 0.0, end: 0.45, syl: "Dans", def: "À l'intérieur" },
+            { word: "les", start: 0.45, end: 0.80, syl: "les", def: "Article pluriel" },
+            { word: "allées,", start: 0.80, end: 1.45, syl: "al — lées", def: "Les chemins entre les étals" },
+            { word: "Koffi", start: 1.45, end: 2.10, syl: "Kof — fi", def: "L'enfant curieux" },
+            { word: "regarde", start: 2.10, end: 2.80, syl: "re — gar — de", def: "Observer avec attention" },
+            { word: "les", start: 2.80, end: 3.15, syl: "les", def: "Article" },
+            { word: "mangues", start: 3.15, end: 3.90, syl: "man — gues", def: "Fruits sucrés délicieux" },
+            { word: "bien", start: 3.90, end: 4.30, syl: "bien", def: "Parfaitement" },
+            { word: "mûres.", start: 4.30, end: 5.10, syl: "mû — res", def: "Prêtes à être mangées" },
+            { word: "L'odeur", start: 5.25, end: 5.95, syl: "L'o — deur", def: "Le parfum qui chatouille le nez" },
+            { word: "du", start: 5.95, end: 6.25, syl: "du", def: "Article" },
+            { word: "poisson", start: 6.25, end: 6.95, syl: "pois — son", def: "Aliment frais de la lagune" },
+            { word: "braisé", start: 6.95, end: 7.70, syl: "brai — sé", def: "Cuit sur le charbon chaud" },
+            { word: "donne", start: 7.70, end: 8.25, syl: "don — ne", def: "Provoque" },
+            { word: "faim.", start: 8.25, end: 9.05, syl: "faim", def: "L'envie de manger" },
+            { word: "Le", start: 9.20, end: 9.55, syl: "Le", def: "Article" },
+            { word: "marchand", start: 9.55, end: 10.35, syl: "mar — chand", def: "La personne qui vend au marché" },
+            { word: "sourit", start: 10.35, end: 11.05, syl: "sou — rit", def: "Affiche un visage joyeux" },
+            { word: "et", start: 11.05, end: 11.40, syl: "et", def: "Liaison" },
+            { word: "tend", start: 11.40, end: 11.95, syl: "tend", def: "Avancer le bras pour donner" },
+            { word: "une", start: 11.95, end: 12.35, syl: "u — ne", def: "Article" },
+            { word: "belle", start: 12.35, end: 12.95, syl: "bel — le", def: "Agréable à regarder" },
+            { word: "orange", start: 12.95, end: 13.75, syl: "o — ran — ge", def: "Fruit rond et juteux" },
+            { word: "à", start: 13.75, end: 14.10, syl: "à", def: "Préposition" },
+            { word: "Koffi.", start: 14.10, end: 15.50, syl: "Kof — fi", def: "Notre héros reconnaissant" }
+          ]
+        }
+      ];
+
+      // Éléments du DOM
+      const storyTextContainer = document.getElementById('story-text-container');
+      const currentPageTitle = document.getElementById('current-page-title');
+      const headerPageBadge = document.getElementById('header-page-badge');
+      const pageIndicatorBadge = document.getElementById('page-indicator-badge');
+      const statusDot = document.getElementById('status-dot');
+      const statusText = document.getElementById('status-text');
+
+      const btnPrimaryPlay = document.getElementById('btn-primary-play');
+      const playIcon = document.getElementById('play-icon');
+      const playText = document.getElementById('play-text');
+      const btnRestart = document.getElementById('btn-restart');
+
+      const progressBarBg = document.getElementById('progress-bar-bg');
+      const progressBarFill = document.getElementById('progress-bar-fill');
+      const timeCurrent = document.getElementById('time-current');
+      const timeTotal = document.getElementById('time-total');
+
+      const speedButtons = document.querySelectorAll('.speed-pill-btn');
+      const btnPrevPage = document.getElementById('btn-prev-page');
+      const btnNextPage = document.getElementById('btn-next-page');
+
+      const koloWordPopup = document.getElementById('kolo-word-popup');
+      const popupWordText = document.getElementById('popup-word-text');
+      const popupSyllablesText = document.getElementById('popup-syllables-text');
+      const btnReplayFromWord = document.getElementById('btn-replay-from-word');
+
+      // État de lecture
+      let currentPageIndex = 0;
+      let isPlaying = false;
+      let currentTime = 0;
+      let currentWordIndex = -1;
+      let playbackSpeed = 1.0;
+      let animationFrameId = null;
+      let lastTimestamp = null;
+      let selectedWordForPopup = null;
+      let speechUtterance = null;
+      const hasSpeech = 'speechSynthesis' in window;
+
+      // Restauration de la vitesse préférée de session
+      try {
+        const savedSpeed = parseFloat(localStorage.getItem('lis_ecoute_speed') || '1.0');
+        if (!isNaN(savedSpeed) && [0.7, 1.0, 1.3].includes(savedSpeed)) {
+          playbackSpeed = savedSpeed;
+        }
+      } catch(e) {}
+
+      // Formatage du temps mm:ss
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+
+      // Initialiser ou charger une page du récit
+      function loadPage(pageIdx) {
+        stopPlayback();
+        currentPageIndex = pageIdx;
+        const pageData = storyPages[currentPageIndex];
+
+        currentTime = 0;
+        currentWordIndex = -1;
+        koloWordPopup.style.display = 'none';
+
+        currentPageTitle.textContent = pageData.title;
+        headerPageBadge.textContent = `Page ${currentPageIndex + 1} sur ${storyPages.length}`;
+        pageIndicatorBadge.textContent = `Page ${currentPageIndex + 1} / ${storyPages.length}`;
+
+        // Pagination buttons state
+        btnPrevPage.disabled = (currentPageIndex === 0);
+        btnNextPage.disabled = (currentPageIndex === storyPages.length - 1);
+
+        // Rendu des mots dans le conteneur
+        storyTextContainer.innerHTML = '';
+        pageData.words.forEach((item, idx) => {
+          const span = document.createElement('span');
+          span.className = 'karaoke-word';
+          span.textContent = item.word + ' ';
+          span.setAttribute('data-index', idx);
+          span.setAttribute('role', 'button');
+          span.setAttribute('tabindex', '0');
+          span.setAttribute('title', `Clique pour écouter "${item.word}"`);
+
+          span.addEventListener('click', () => onWordClick(idx));
+          storyTextContainer.appendChild(span);
+        });
+
+        timeCurrent.textContent = formatTime(0);
+        timeTotal.textContent = formatTime(pageData.totalDuration);
+        progressBarFill.style.width = '0%';
+        updateWordHighlights(0);
+      }
+
+      // Mise à jour visuelle du surlignage mot par mot
+      function updateWordHighlights(time) {
+        const pageData = storyPages[currentPageIndex];
+        const words = pageData.words;
+        let activeIdx = -1;
+
+        for (let i = 0; i < words.length; i++) {
+          if (time >= words[i].start && time <= words[i].end) {
+            activeIdx = i;
+            break;
+          }
+        }
+
+        const wordElements = storyTextContainer.querySelectorAll('.karaoke-word');
+
+        if (activeIdx !== currentWordIndex) {
+          currentWordIndex = activeIdx;
+          wordElements.forEach((el, i) => {
+            if (i === currentWordIndex) {
+              el.classList.add('active');
+              el.classList.remove('past');
+
+              // Auto-scroll pour garder le mot toujours visible (exigence PRD 3.13)
+              el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+              });
+            } else if (currentWordIndex !== -1 && i < currentWordIndex) {
+              el.classList.remove('active');
+              el.classList.add('past');
+            } else {
+              el.classList.remove('active');
+              el.classList.remove('past');
+            }
+          });
+        }
+
+        // Barre de progression
+        const percent = Math.min(100, (time / pageData.totalDuration) * 100);
+        progressBarFill.style.width = percent + '%';
+        timeCurrent.textContent = formatTime(time);
+      }
+
+      // Synthèse audio du texte complet ou de la réécoute
+      function playAudioText(textToSpeak, rate) {
+        if (!hasSpeech) return;
+        try {
+          window.speechSynthesis.cancel();
+          speechUtterance = new SpeechSynthesisUtterance(textToSpeak);
+          speechUtterance.lang = 'fr-FR';
+          speechUtterance.rate = rate || playbackSpeed;
+          speechUtterance.pitch = 1.05; // voix claire et bienveillante pour enfants
+          window.speechSynthesis.speak(speechUtterance);
+        } catch(e) {}
+      }
+
+      function stopAudio() {
+        if (hasSpeech) {
+          try {
+            window.speechSynthesis.cancel();
+          } catch(e) {}
+        }
+      }
+
+      // Boucle d'animation fluide
+      function tick(timestamp) {
+        if (!lastTimestamp) lastTimestamp = timestamp;
+        const delta = (timestamp - lastTimestamp) / 1000;
+        lastTimestamp = timestamp;
+
+        currentTime += delta * playbackSpeed;
+        const pageData = storyPages[currentPageIndex];
+
+        if (currentTime >= pageData.totalDuration) {
+          currentTime = pageData.totalDuration;
+          updateWordHighlights(currentTime);
+          stopPlayback();
+
+          // Passage automatique à la page suivante ou félicitations
+          if (currentPageIndex < storyPages.length - 1) {
+            statusText.textContent = "Page terminée ! Passage à la suite...";
+            setTimeout(() => {
+              loadPage(currentPageIndex + 1);
+            }, 1200);
+          } else {
+            statusText.textContent = "Histoire terminée ! Prêt pour le quiz 🎉";
+            // Flash invitation quiz
+            const quizBtn = document.getElementById('btn-go-quiz');
+            if (quizBtn) {
+              quizBtn.style.transform = 'scale(1.04)';
+              setTimeout(() => { quizBtn.style.transform = 'none'; }, 600);
+            }
+          }
+          return;
+        }
+
+        updateWordHighlights(currentTime);
+
+        if (isPlaying) {
+          animationFrameId = requestAnimationFrame(tick);
+        }
+      }
+
+      // Démarrer la lecture
+      function startPlayback() {
+        const pageData = storyPages[currentPageIndex];
+        if (currentTime >= pageData.totalDuration) {
+          currentTime = 0;
+        }
+        isPlaying = true;
+
+        btnPrimaryPlay.classList.add('playing');
+        playText.textContent = "Mettre en pause";
+        playIcon.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+        statusDot.classList.add('playing');
+        statusText.textContent = "Écoute en cours...";
+
+        // Si on reprend à partir d'un mot ou du début
+        const remainingWords = pageData.words.filter(w => w.start >= currentTime).map(w => w.word).join(' ');
+        playAudioText(remainingWords || pageData.words.map(w => w.word).join(' '), playbackSpeed);
+
+        lastTimestamp = null;
+        animationFrameId = requestAnimationFrame(tick);
+      }
+
+      // Mettre en pause
+      function stopPlayback() {
+        isPlaying = false;
+        btnPrimaryPlay.classList.remove('playing');
+        playText.textContent = "Reprendre la lecture";
+        playIcon.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+        statusDot.classList.remove('playing');
+        statusText.textContent = "En pause";
+
+        stopAudio();
+
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+
+      // Recommencer la page actuelle
+      function restartPage() {
+        stopPlayback();
+        currentTime = 0;
+        currentWordIndex = -1;
+        updateWordHighlights(0);
+        statusText.textContent = "Retour au début de la page";
+        playText.textContent = "Écouter l'histoire";
+        koloWordPopup.style.display = 'none';
+      }
+
+      // Clic sur n'importe quel mot = réécoute à partir de ce mot (PRD F6)
+      function onWordClick(idx) {
+        const pageData = storyPages[currentPageIndex];
+        const item = pageData.words[idx];
+        if (!item) return;
+
+        selectedWordForPopup = item;
+        stopPlayback();
+
+        // Se caler sur le mot cliqué
+        currentTime = item.start;
+        updateWordHighlights(currentTime);
+
+        // Afficher la bulle de Kolo avec décomposition syllabique
+        popupWordText.textContent = item.word.replace(/[.,!]/g, '');
+        popupSyllablesText.textContent = `Syllabes : ${item.syl} • ${item.def}`;
+        koloWordPopup.style.display = 'block';
+
+        // Énoncer le mot isolé immédiatement
+        playAudioText(item.word.replace(/[.,!]/g, ''), 0.8);
+      }
+
+      // Écouteurs des contrôles principaux
+      btnPrimaryPlay.addEventListener('click', function() {
+        if (isPlaying) {
+          stopPlayback();
+        } else {
+          startPlayback();
+        }
+      });
+
+      btnRestart.addEventListener('click', restartPage);
+
+      // Réécoute continue à partir du mot sélectionné dans la bulle Kolo
+      btnReplayFromWord.addEventListener('click', function() {
+        koloWordPopup.style.display = 'none';
+        startPlayback();
+      });
+
+      // Contrôle de vitesse (PRD F7) : 0.7x, 1x, 1.3x
+      speedButtons.forEach(btn => {
+        const speedVal = parseFloat(btn.getAttribute('data-speed'));
+        if (speedVal === playbackSpeed) {
+          speedButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+
+        btn.addEventListener('click', function() {
+          speedButtons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          playbackSpeed = speedVal;
+
+          try {
+            localStorage.setItem('lis_ecoute_speed', playbackSpeed.toString());
+          } catch(e) {}
+
+          // Si en lecture, réajuster en direct
+          if (isPlaying) {
+            stopAudio();
+            const pageData = storyPages[currentPageIndex];
+            const remainingWords = pageData.words.filter(w => w.start >= currentTime).map(w => w.word).join(' ');
+            playAudioText(remainingWords, playbackSpeed);
+          }
+        });
+      });
+
+      // Pagination Précédent / Suivant (PRD F8)
+      btnPrevPage.addEventListener('click', () => {
+        if (currentPageIndex > 0) {
+          loadPage(currentPageIndex - 1);
+        }
+      });
+
+      btnNextPage.addEventListener('click', () => {
+        if (currentPageIndex < storyPages.length - 1) {
+          loadPage(currentPageIndex + 1);
+        }
+      });
+
+      // Clic direct sur la barre de progression pour naviguer dans la page
+      progressBarBg.addEventListener('click', function(e) {
+        const rect = progressBarBg.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const width = rect.width;
+        const ratio = Math.max(0, Math.min(1, clickX / width));
+        const pageData = storyPages[currentPageIndex];
+
+        currentTime = ratio * pageData.totalDuration;
+        updateWordHighlights(currentTime);
+
+        if (isPlaying) {
+          stopAudio();
+          const remainingWords = pageData.words.filter(w => w.start >= currentTime).map(w => w.word).join(' ');
+          playAudioText(remainingWords, playbackSpeed);
+        }
+      });
+
+      // Initialisation
+      loadPage(0);
+
+    })();
+  </script>
+</body>
+</html>

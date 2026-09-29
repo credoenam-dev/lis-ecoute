@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Tarifs Établissements — Lis & Écoute</title>
+  <meta name="description" content="Découvrez les formules d'abonnement annuel Lis & Écoute pour les écoles primaires de Côte d'Ivoire. 30 jours d'essai gratuit, sans carte bancaire. Wave, Orange Money et virement.">
+
+  <!-- Polices officielles de la marque : Baloo 2, Zilla Slab, Work Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE : PALETTE TISSUS ET TERRE
+       ========================================================================== */
+    :root {
+      --cream: #F7EEDA;
+      --millet: #ECD9B4;
+      --white: #FFFFFF;
+      --ink: #2B2018;
+      --indigo: #234B5E;
+      --terracotta: #C1652B;
+      --saffron: #E8A23B;
+      --leaf: #5B8C51;
+
+      --millet-border: #D8C296;
+      --leaf-light: #EBF3EA;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui: 'Work Sans', sans-serif;
+
+      --rayon-carte: 16px;
+      --rayon-bouton: 12px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    /* Wave motif */
+    .wave-svg {
+      display: block;
+      width: 100%;
+      height: 32px;
+      background: var(--cream);
+    }
+
+    /* Bandeau haut */
+    .top-banner {
+      background-color: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 14px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .top-banner span.highlight {
+      background-color: var(--saffron);
+      color: var(--ink);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      border: 1px solid var(--ink);
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 14px 0;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background-color: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0px var(--ink);
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: var(--font-titre);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--indigo);
+    }
+    .brand-name span {
+      color: var(--terracotta);
+    }
+    .brand-subtitle {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .header-cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-connexion {
+      background-color: var(--white);
+      color: var(--indigo);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 9px 16px;
+      border-radius: var(--rayon-bouton);
+      border: 1.5px solid var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+      text-decoration: none;
+    }
+
+    /* Hero Tarifs */
+    .hero-tarifs {
+      text-align: center;
+      padding: 36px 0 28px;
+    }
+    .section-tag {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--indigo);
+      background-color: var(--millet);
+      border: 1.5px solid var(--indigo);
+      padding: 5px 14px;
+      border-radius: 30px;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      font-family: var(--font-titre);
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--indigo);
+      max-width: 820px;
+      margin: 0 auto 14px;
+    }
+    .hero-lead {
+      font-family: var(--font-corps);
+      font-size: 18px;
+      color: var(--ink);
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Grille des 3 cartes */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 20px 0 44px;
+    }
+    @media (min-width: 860px) {
+      .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+        align-items: stretch;
+      }
+    }
+
+    .plan-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 28px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.1s ease;
+    }
+    .plan-card.featured {
+      background-color: #FFFDF9;
+      border: 3px solid var(--indigo);
+      box-shadow: 6px 6px 0px var(--indigo);
+    }
+    @media (min-width: 860px) {
+      .plan-card.featured {
+        transform: translateY(-8px);
+      }
+    }
+
+    .plan-badge-top {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--indigo);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--ink);
+      white-space: nowrap;
+    }
+
+    .plan-header {
+      border-bottom: 2px dashed var(--millet-border);
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .plan-title {
+      font-family: var(--font-titre);
+      font-size: 25px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 4px;
+    }
+    .plan-capacity {
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--terracotta);
+      margin-bottom: 14px;
+    }
+
+    .plan-pricing-box {
+      margin-bottom: 8px;
+    }
+    .price-struck {
+      font-family: var(--font-ui);
+      font-size: 16px;
+      font-weight: 600;
+      color: #8C7B6C;
+      text-decoration: line-through;
+      margin-bottom: 2px;
+    }
+    .price-main {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 6px;
+    }
+    .price-amount {
+      font-family: var(--font-titre);
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+    .price-currency {
+      font-family: var(--font-titre);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--terracotta);
+    }
+    .price-period {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .price-subtext {
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-top: 4px;
+    }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex: 1;
+      text-align: left;
+    }
+    .plan-feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-family: var(--font-corps);
+      font-size: 15.5px;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+    .feature-check {
+      width: 20px;
+      height: 20px;
+      background-color: var(--leaf-light);
+      color: var(--leaf);
+      border: 1.5px solid var(--leaf);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .btn-plan-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 17px;
+      font-weight: 800;
+      padding: 14px 18px;
+      border-radius: var(--rayon-bouton);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0px var(--ink);
+      text-decoration: none;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn-plan-cta:hover {
+      background-color: #DE952B;
+    }
+    .btn-plan-cta:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    /* Section Paiement Local */
+    .section-payment-info {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 28px 24px;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+    .payment-headline {
+      font-family: var(--font-titre);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 8px;
+    }
+    .payment-notice {
+      font-family: var(--font-corps);
+      font-size: 17px;
+      color: var(--ink);
+      margin-bottom: 18px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .payment-badges-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .pay-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--ink);
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+    .pay-wave { background-color: #1DC4FF; color: #002244; }
+    .pay-orange { background-color: #FF7900; color: #FFFFFF; }
+    .pay-virement { background-color: var(--millet); color: var(--ink); }
+
+    /* Section Réassurance 30 jours */
+    .trial-guarantee-box {
+      background-color: var(--millet);
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      padding: 22px;
+      margin-bottom: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+    @media (min-width: 600px) {
+      .trial-guarantee-box {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        gap: 20px;
+      }
+    }
+    .guarantee-icon {
+      font-size: 38px;
+      flex-shrink: 0;
+    }
+    .guarantee-text h4 {
+      font-family: var(--font-titre);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--indigo);
+      margin-bottom: 2px;
+    }
+    .guarantee-text p {
+      font-family: var(--font-corps);
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--cream);
+      padding: 32px 0 24px;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      color: var(--ink);
+      text-align: center;
+    }
+    .site-footer a {
+      color: var(--indigo);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Motif vague signature -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- Bandeau info locale -->
+  <div class="top-banner">
+    <span>🇨🇮 Lis & Écoute pour les écoles primaires</span>
+    <span class="highlight">30 jours d'essai gratuit</span>
+    <span>pour tout votre établissement</span>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Accueil Lis & Écoute">
+        <div class="logo-badge">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F7EEDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M10 8h6"></path>
+            <path d="M10 12h4"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Lis <span>&</span> Écoute</div>
+          <div class="brand-subtitle">Le livre à l'oreille</div>
+        </div>
+      </a>
+
+      <div class="header-cta">
+        <a href="index.html" style="font-family: var(--font-ui); font-size: 14px; font-weight: 600; color: var(--indigo); text-decoration: none; margin-right: 8px;">← Accueil</a>
+        <a href="connexion.html" class="btn-connexion">Espace Connexion</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenu Principal -->
+  <main class="container">
+    <section class="hero-tarifs">
+      <span class="section-tag">Abonnement Annuel Établissement (B2B)</span>
+      <h1 class="hero-title">Une formule unique pour toute votre école, sans calcul par élève.</h1>
+      <p class="hero-lead">
+        Donnez l'accès illimité à tous vos enseignants et à tous vos écoliers du CP1 au CM2 pour toute l'année scolaire. Testez librement avant tout engagement.
+      </p>
+    </section>
+
+    <!-- Grille des 3 cartes selon PRD 6.2 -->
+    <div class="pricing-grid">
+      
+      <!-- CARTE 1 : Petite école -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <h2 class="plan-title">Petite école</h2>
+          <div class="plan-capacity">Jusqu'à 100 élèves (1 à 3 classes)</div>
+          <div class="plan-pricing-box">
+            <div class="price-struck">75 000 FCFA</div>
+            <div class="price-main">
+              <span class="price-amount">50 000</span>
+              <span class="price-currency">FCFA</span>
+              <span class="price-period">/ an</span>
+            </div>
+            <div class="price-subtext">Soit ~4 200 FCFA/mois pour l'école</div>
+          </div>
+        </div>
+
+        <ul class="plan-features">
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Accès complet à tous les récits du CP1 au CM2.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Lecture karaoké synchronisée mot par mot.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Questionnaires de compréhension adaptatifs par l'IA.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Codes 4 chiffres simples pour les écoliers (F13).</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Tableau de bord directeur et suivi des classes.</span>
+          </li>
+        </ul>
+
+        <a href="inscription.html?formule=petite" class="btn-plan-cta">
+          Démarrer essai gratuit 30 jours
+        </a>
+      </div>
+
+      <!-- CARTE 2 : École moyenne (Mise en avant) -->
+      <div class="plan-card featured">
+        <span class="plan-badge-top">Formule Recommandée</span>
+        
+        <div class="plan-header">
+          <h2 class="plan-title">École moyenne</h2>
+          <div class="plan-capacity">101 à 300 élèves (4 à 8 classes)</div>
+          <div class="plan-pricing-box">
+            <div class="price-struck">150 000 FCFA</div>
+            <div class="price-main">
+              <span class="price-amount">100 000</span>
+              <span class="price-currency">FCFA</span>
+              <span class="price-period">/ an</span>
+            </div>
+            <div class="price-subtext">Soit ~8 330 FCFA/mois pour toute l'école</div>
+          </div>
+        </div>
+
+        <ul class="plan-features">
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span><strong>Toutes les fonctionnalités de la formule Petite école.</strong></span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Comptes enseignants dédiés pour chaque instituteur.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Impression groupée des fiches de codes élèves.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Suivi des élèves en difficulté par niveau scolaire.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Assistance directe de l'équipe pédagogique via WhatsApp.</span>
+          </li>
+        </ul>
+
+        <a href="inscription.html?formule=moyenne" class="btn-plan-cta" style="background-color: var(--saffron);">
+          Démarrer essai gratuit 30 jours
+        </a>
+      </div>
+
+      <!-- CARTE 3 : Grande école -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <h2 class="plan-title">Grande école</h2>
+          <div class="plan-capacity">301 élèves et plus (9 classes et plus)</div>
+          <div class="plan-pricing-box">
+            <div class="price-struck">200 000 FCFA</div>
+            <div class="price-main">
+              <span class="price-amount">150 000</span>
+              <span class="price-currency">FCFA</span>
+              <span class="price-period">/ an</span>
+            </div>
+            <div class="price-subtext">Soit ~12 500 FCFA/mois pour l'établissement</div>
+          </div>
+        </div>
+
+        <ul class="plan-features">
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span><strong>Toutes les fonctionnalités de la formule École moyenne.</strong></span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Nombre illimité de classes et d'élèves.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Comptes multiples (Directeur, Adjoints, Inspecteurs).</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Bilan pédagogique global de fin d'année pour le ministère.</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="feature-check">✓</span>
+            <span>Facturation officielle avec reçu pour votre comptable.</span>
+          </li>
+        </ul>
+
+        <a href="inscription.html?formule=grande" class="btn-plan-cta">
+          Démarrer essai gratuit 30 jours
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Encadré Moyens de Paiement (PRD 6.4) -->
+    <div class="section-payment-info">
+      <div class="payment-headline">Sans carte bancaire. Wave / Orange Money / Virement</div>
+      <p class="payment-notice">
+        Pas de carte bancaire nécessaire. L'établissement règle simplement via ses canaux de paiement habituels. Les virements bancaires incluent une facture proforma et un reçu officiel pour votre comptabilité.
+      </p>
+      <div class="payment-badges-row">
+        <span class="pay-badge pay-wave">🌊 Wave (Direct sans frais)</span>
+        <span class="pay-badge pay-orange">🟠 Orange Money</span>
+        <span class="pay-badge pay-virement">🏦 Virement bancaire avec référence</span>
+      </div>
+    </div>
+
+    <!-- Réassurance essai gratuit -->
+    <div class="trial-guarantee-box">
+      <div class="guarantee-icon">🛡️</div>
+      <div class="guarantee-text">
+        <h4>30 jours d'essai sans aucun moyen de paiement requis</h4>
+        <p>
+          Inscrivez votre établissement en 2 minutes. Vos classes testent Lis & Écoute directement avec leurs élèves. Si vous n'êtes pas convaincu après 30 jours, vous ne payez rien et votre compte s'arrête sans formalité.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Motif vague bas -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none" style="transform:scaleY(-1)">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#5B8C51" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin-bottom: 8px;">
+        © 2026 Lis & Écoute — La lecture karaoké pensée pour l'école primaire ivoirienne.
+      </p>
+      <p>
+        <a href="index.html">Page d'accueil</a> • <a href="inscription.html">Créer un compte école</a> • <a href="connexion.html">Se connecter</a> • <a href="https://wa.me/22500000000" target="_blank" rel="noopener">Support WhatsApp direct</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Connexion — Lis & Écoute</title>
+  <meta name="description" content="Espace de connexion Lis & Écoute. Accès sécurisé pour les Directeurs, Enseignants et Élèves avec pavé numérique 4 chiffres.">
+
+  <!-- Polices officielles de la marque : Baloo 2, Zilla Slab, Work Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHARTE OFFICIELLE LIS & ÉCOUTE : PALETTE TISSUS ET TERRE
+       ========================================================================== */
+    :root {
+      --cream: #F7EEDA;
+      --millet: #ECD9B4;
+      --white: #FFFFFF;
+      --ink: #2B2018;
+      --indigo: #234B5E;
+      --terracotta: #C1652B;
+      --saffron: #E8A23B;
+      --leaf: #5B8C51;
+
+      --millet-border: #D8C296;
+      --leaf-light: #EBF3EA;
+
+      --font-titre: 'Baloo 2', sans-serif;
+      --font-corps: 'Zilla Slab', Georgia, serif;
+      --font-ui: 'Work Sans', sans-serif;
+
+      --rayon-carte: 16px;
+      --rayon-bouton: 12px;
+      --rayon-input: 10px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-corps);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    /* Wave motif */
+    .wave-svg {
+      display: block;
+      width: 100%;
+      height: 32px;
+      background: var(--cream);
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--cream);
+      border-bottom: 2px solid var(--millet-border);
+      padding: 14px 0;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background-color: var(--indigo);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0px var(--ink);
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: var(--font-titre);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--indigo);
+    }
+    .brand-name span {
+      color: var(--terracotta);
+    }
+    .brand-subtitle {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .header-link-home {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--indigo);
+      text-decoration: none;
+    }
+
+    /* Main Container */
+    .main-wrap {
+      flex: 1;
+      padding: 24px 0 44px;
+    }
+
+    .login-intro {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .login-title {
+      font-family: var(--font-titre);
+      font-size: clamp(26px, 5.5vw, 36px);
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .login-subtitle {
+      font-family: var(--font-corps);
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+
+    /* 3 Onglets Rôles : Directeur / Enseignant / Élève */
+    .role-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background-color: var(--millet);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      padding: 6px;
+      margin-bottom: 22px;
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+    .role-tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 10px 4px;
+      border-radius: 10px;
+      font-family: var(--font-titre);
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--ink);
+      border: 1.5px solid transparent;
+      background: none;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .role-tab-btn .role-icon {
+      font-size: 20px;
+    }
+    .role-tab-btn.active {
+      background-color: var(--indigo);
+      color: var(--cream);
+      border-color: var(--ink);
+      box-shadow: 2px 2px 0px var(--ink);
+    }
+
+    /* Card du formulaire */
+    .login-card {
+      background-color: var(--white);
+      border: 2.5px solid var(--ink);
+      border-radius: var(--rayon-carte);
+      box-shadow: 4px 4px 0px var(--ink);
+      padding: 26px 20px;
+    }
+    @media (min-width: 440px) {
+      .login-card {
+        padding: 32px 26px;
+      }
+    }
+
+    /* Formulaire Standard (Directeur & Enseignant) */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .form-label {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--indigo);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-input {
+      width: 100%;
+      box-sizing: border-box;
+      font-family: var(--font-ui);
+      font-size: 16px;
+      color: var(--ink);
+      background-color: #FFFDF9;
+      border: 2px solid var(--ink);
+      border-radius: var(--rayon-input);
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.1s ease, box-shadow 0.1s ease;
+    }
+    .form-input:focus {
+      border-color: var(--indigo);
+      background-color: #FFFFFF;
+      box-shadow: 2px 2px 0px var(--indigo);
+    }
+    .password-wrap {
+      position: relative;
+      width: 100%;
+    }
+    .password-wrap .form-input {
+      padding-right: 46px;
+    }
+    .btn-pwd-peek {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-family: var(--font-titre);
+      font-size: 19px;
+      font-weight: 800;
+      padding: 15px 20px;
+      border-radius: var(--rayon-bouton);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0px var(--ink);
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      margin-top: 6px;
+    }
+    .btn-login-submit:hover {
+      background-color: #DE952B;
+    }
+    .btn-login-submit:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    .help-links-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1.5px dashed var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+    }
+    .help-links-row a {
+      color: var(--indigo);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       ESPACE ÉLÈVE : Pavé Numérique 4 Chiffres (Spécification F13)
+       ========================================================================== */
+    .eleve-greeting-box {
+      background-color: var(--millet);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .kolo-mini-avatar {
+      width: 42px;
+      height: 42px;
+      background-color: var(--leaf);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .eleve-greeting-text {
+      font-family: var(--font-corps);
+      font-size: 15px;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+    .eleve-greeting-text strong {
+      color: var(--indigo);
+      font-family: var(--font-titre);
+      font-size: 16px;
+    }
+
+    /* Affichage des 4 chiffres du code */
+    .pin-display-wrap {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .pin-display-label {
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--indigo);
+      margin-bottom: 10px;
+    }
+    .pin-dots-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .pin-slot {
+      width: 48px;
+      height: 52px;
+      background-color: #FFFDF9;
+      border: 2.5px solid var(--ink);
+      border-radius: 10px;
+      box-shadow: 2px 2px 0px var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-titre);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--indigo);
+      transition: all 0.1s ease;
+    }
+    .pin-slot.filled {
+      background-color: var(--millet);
+      border-color: var(--indigo);
+      transform: scale(1.04);
+    }
+    .pin-slot.error {
+      border-color: var(--terracotta);
+      background-color: #FBEAE4;
+    }
+
+    /* Grille du Pavé Numérique Tactile */
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+    .key-btn {
+      height: 56px;
+      background-color: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      box-shadow: 2px 2px 0px var(--ink);
+      font-family: var(--font-titre);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: transform 0.05s ease, background-color 0.1s ease;
+    }
+    .key-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px var(--ink);
+      background-color: var(--millet);
+    }
+    .key-action {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .key-backspace {
+      background-color: #FBEAE4;
+      color: var(--terracotta);
+      font-size: 18px;
+    }
+    .key-validate {
+      background-color: var(--saffron);
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .keypad-feedback {
+      text-align: center;
+      min-height: 24px;
+      margin-top: 10px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--terracotta);
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--cream);
+      padding: 24px 0;
+      border-top: 2px solid var(--millet-border);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: auto;
+    }
+    .site-footer a {
+      color: var(--indigo);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Motif vague signature en haut -->
+  <svg class="wave-svg" viewBox="0 0 920 60" preserveAspectRatio="none">
+    <path d="M0,40 Q40,10 80,40 T160,40 T240,40 T320,40 T400,40 T480,40 T560,40 T640,40 T720,40 T800,40 T880,40 T960,40"
+          fill="none" stroke="#C1652B" stroke-width="3" opacity="0.5"/>
+    <path d="M0,48 Q40,22 80,48 T160,48 T240,48 T320,48 T400,48 T480,48 T560,48 T640,48 T720,48 T800,48 T880,48 T960,48"
+          fill="none" stroke="#E8A23B" stroke-width="3" opacity="0.4"/>
+  </svg>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Accueil Lis & Écoute">
+        <div class="logo-badge">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F7EEDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M10 8h6"></path>
+            <path d="M10 12h4"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Lis <span>&</span> Écoute</div>
+          <div class="brand-subtitle">Le livre à l'oreille</div>
+        </div>
+      </a>
+
+      <div>
+        <a href="index.html" class="header-link-home">← Retour au site</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-wrap">
+    <div class="container">
+      
+      <div class="login-intro">
+        <h1 class="login-title">Espace Connexion</h1>
+        <p class="login-subtitle">Choisissez votre profil pour accéder à vos lectures.</p>
+      </div>
+
+      <!-- 3 Choix de rôles selon PRD 3.4 : Directeur / Enseignant / Élève -->
+      <div class="role-tabs" role="tablist">
+        <button type="button" class="role-tab-btn active" id="tab-directeur" data-role="directeur" role="tab" aria-selected="true">
+          <span class="role-icon">👔</span>
+          <span>Directeur</span>
+        </button>
+        <button type="button" class="role-tab-btn" id="tab-enseignant" data-role="enseignant" role="tab" aria-selected="false">
+          <span class="role-icon">👨🏾‍🏫</span>
+          <span>Enseignant</span>
+        </button>
+        <button type="button" class="role-tab-btn" id="tab-eleve" data-role="eleve" role="tab" aria-selected="false">
+          <span class="role-icon">🎒</span>
+          <span>Élève</span>
+        </button>
+      </div>
+
+      <!-- CARTE FORMULAIRE DYNAMIQUE -->
+      <div class="login-card">
+        
+        <!-- VUE 1 : Formulaire DIRECTEUR & ENSEIGNANT -->
+        <div id="view-adults">
+          <form id="adult-login-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="login-id">
+                <span id="label-identifiant">Téléphone WhatsApp ou Email</span>
+              </label>
+              <input type="text" id="login-id" class="form-input" placeholder="Ex. +225 07 12 34 56 78" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="login-password">
+                <span>Mot de passe</span>
+              </label>
+              <div class="password-wrap">
+                <input type="password" id="login-password" class="form-input" placeholder="Votre mot de passe" required autocomplete="current-password">
+                <button type="button" class="btn-pwd-peek" id="btn-peek-pwd" aria-label="Afficher le mot de passe">👁️</button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-login-submit" id="btn-submit-adult">
+              <span id="btn-submit-text">Se connecter à l'espace école</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+
+            <div class="help-links-row">
+              <a href="https://wa.me/22500000000?text=Bonjour%2C%20j%27ai%20oubli%C3%A9%20mon%20mot%20de%20passe%20Lis%20%26%20%C3%89coute" target="_blank" rel="noopener">Mot de passe oublié ?</a>
+              <a href="inscription.html">Créer un compte école</a>
+            </div>
+          </form>
+        </div>
+
+        <!-- VUE 2 : Formulaire ÉLÈVE avec Pavé Numérique 4 Chiffres (PRD F13) -->
+        <div id="view-eleve" style="display: none;">
+          <div class="eleve-greeting-box">
+            <div class="kolo-mini-avatar" title="Kolo">🦎</div>
+            <div class="eleve-greeting-text">
+              <strong>Coucou petit lecteur !</strong><br>
+              Choisis ton prénom et tape ton <strong>code secret à 4 chiffres</strong>.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="eleve-name">
+              <span>Ton prénom ou ton identifiant</span>
+            </label>
+            <input type="text" id="eleve-name" class="form-input" placeholder="Ex. Koffi, Mariam, Awa..." value="Koffi" required autocomplete="off">
+          </div>
+
+          <!-- Affichage visuel des 4 cases PIN F13 -->
+          <div class="pin-display-wrap">
+            <div class="pin-display-label">Ton code secret à 4 chiffres :</div>
+            <div class="pin-dots-row">
+              <div class="pin-slot" id="slot-0">•</div>
+              <div class="pin-slot" id="slot-1">•</div>
+              <div class="pin-slot" id="slot-2">•</div>
+              <div class="pin-slot" id="slot-3">•</div>
+            </div>
+          </div>
+
+          <!-- Pavé numérique tactile F13 -->
+          <div class="keypad-grid" role="group" aria-label="Pavé numérique tactile">
+            <button type="button" class="key-btn" data-key="1">1</button>
+            <button type="button" class="key-btn" data-key="2">2</button>
+            <button type="button" class="key-btn" data-key="3">3</button>
+
+            <button type="button" class="key-btn" data-key="4">4</button>
+            <button type="button" class="key-btn" data-key="5">5</button>
+            <button type="button" class="key-btn" data-key="6">6</button>
+
+            <button type="button" class="key-btn" data-key="7">7</button>
+            <button type="button" class="key-btn" data-key="8">8</button>
+            <button type="button" class="key-btn" data-key="9">9</button>
+
+            <button type="button" class="key-btn key-action key-backspace" id="key-clear" title="Effacer le dernier chiffre">⌫</button>
+            <button type="button" class="key-btn" data-key="0">0</button>
+            <button type="button" class="key-btn key-action key-validate" id="key-enter">OK ✓</button>
+          </div>
+
+          <div class="keypad-feedback" id="pin-feedback"></div>
+
+          <div class="help-links-row" style="justify-content: center; margin-top: 14px;">
+            <span style="font-size: 13px; color: var(--ink);">Code perdu ? Demande à ton maître ou ta maîtresse.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin-bottom: 6px;">
+        © 2026 Lis & Écoute — Le livre à l'oreille, le mot à la bouche.
+      </p>
+      <p>
+        <a href="index.html">Accueil</a> • <a href="tarif.html">Tarifs écoles</a> • <a href="inscription.html">Essai 30 jours gratuit</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Gestion des 3 onglets rôles
+      const tabDirecteur = document.getElementById('tab-directeur');
+      const tabEnseignant = document.getElementById('tab-enseignant');
+      const tabEleve = document.getElementById('tab-eleve');
+      const viewAdults = document.getElementById('view-adults');
+      const viewEleve = document.getElementById('view-eleve');
+      const labelIdentifiant = document.getElementById('label-identifiant');
+      const btnSubmitText = document.getElementById('btn-submit-text');
+      const loginIdInput = document.getElementById('login-id');
+
+      let currentRole = 'directeur';
+
+      function switchRole(role) {
+        currentRole = role;
+        [tabDirecteur, tabEnseignant, tabEleve].forEach(t => t.classList.remove('active'));
+
+        if (role === 'directeur') {
+          tabDirecteur.classList.add('active');
+          viewAdults.style.display = 'block';
+          viewEleve.style.display = 'none';
+          labelIdentifiant.textContent = "Téléphone WhatsApp ou Email de l'école";
+          btnSubmitText.textContent = "Se connecter à l'espace école";
+          loginIdInput.placeholder = "Ex. +225 07 12 34 56 78";
+        } else if (role === 'enseignant') {
+          tabEnseignant.classList.add('active');
+          viewAdults.style.display = 'block';
+          viewEleve.style.display = 'none';
+          labelIdentifiant.textContent = "Identifiant ou Nom de l'enseignant";
+          btnSubmitText.textContent = "Accéder à l'espace classe";
+          loginIdInput.placeholder = "Ex. Maître Yao ou yao@ecole.ci";
+        } else if (role === 'eleve') {
+          tabEleve.classList.add('active');
+          viewAdults.style.display = 'none';
+          viewEleve.style.display = 'block';
+          resetPin();
+        }
+      }
+
+      tabDirecteur.addEventListener('click', () => switchRole('directeur'));
+      tabEnseignant.addEventListener('click', () => switchRole('enseignant'));
+      tabEleve.addEventListener('click', () => switchRole('eleve'));
+
+      // Afficher / masquer mot de passe adulte
+      const pwdInput = document.getElementById('login-password');
+      const btnPeekPwd = document.getElementById('btn-peek-pwd');
+      if (btnPeekPwd && pwdInput) {
+        btnPeekPwd.addEventListener('click', function() {
+          if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            btnPeekPwd.textContent = '🙈';
+          } else {
+            pwdInput.type = 'password';
+            btnPeekPwd.textContent = '👁️';
+          }
+        });
+      }
+
+      // Connexion Directeur / Enseignant
+      const adultForm = document.getElementById('adult-login-form');
+      adultForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const identifiant = loginIdInput.value.trim();
+        const pwd = pwdInput.value;
+
+        if (!identifiant || !pwd) {
+          alert("Veuillez renseigner votre identifiant et votre mot de passe.");
+          return;
+        }
+
+        // Sauvegarde de session dans localStorage (V1)
+        const sessionData = {
+          role: currentRole,
+          userName: identifiant,
+          isLoggedIn: true,
+          loginTime: new Date().toISOString()
+        };
+        try {
+          localStorage.setItem('lis_ecoute_session', JSON.stringify(sessionData));
+        } catch (err) {
+          console.warn(err);
+        }
+
+        // Redirection selon le rôle
+        if (currentRole === 'enseignant') {
+          window.location.href = 'dashboard-enseignant.html';
+        } else {
+          window.location.href = 'tableau-bord-ecole.html';
+        }
+      });
+
+      // ==========================================================================
+      // GESTION DU PAVÉ NUMÉRIQUE ÉLÈVE 4 CHIFFRES (Spécification F13)
+      // ==========================================================================
+      let pinCode = '';
+      const slots = [
+        document.getElementById('slot-0'),
+        document.getElementById('slot-1'),
+        document.getElementById('slot-2'),
+        document.getElementById('slot-3')
+      ];
+      const pinFeedback = document.getElementById('pin-feedback');
+
+      function updatePinDisplay() {
+        for (let i = 0; i < 4; i++) {
+          if (i < pinCode.length) {
+            slots[i].textContent = pinCode[i];
+            slots[i].classList.add('filled');
+          } else {
+            slots[i].textContent = '•';
+            slots[i].classList.remove('filled');
+          }
+          slots[i].classList.remove('error');
+        }
+      }
+
+      function resetPin() {
+        pinCode = '';
+        pinFeedback.textContent = '';
+        updatePinDisplay();
+      }
+
+      function enterDigit(digit) {
+        if (pinCode.length < 4) {
+          pinCode += digit;
+          updatePinDisplay();
+
+          // Validation automatique dès que les 4 chiffres sont tapés
+          if (pinCode.length === 4) {
+            validateEleveLogin();
+          }
+        }
+      }
+
+      function removeDigit() {
+        if (pinCode.length > 0) {
+          pinCode = pinCode.slice(0, -1);
+          pinFeedback.textContent = '';
+          updatePinDisplay();
+        }
+      }
+
+      function validateEleveLogin() {
+        if (pinCode.length !== 4) {
+          pinFeedback.textContent = 'Tape les 4 chiffres de ton code.';
+          return;
+        }
+
+        const eleveName = document.getElementById('eleve-name').value.trim() || 'Élève';
+        pinFeedback.style.color = 'var(--leaf)';
+        pinFeedback.textContent = 'Bravo ! Connexion en cours...';
+
+        // Sauvegarde session élève dans localStorage (V1)
+        const eleveSession = {
+          role: 'eleve',
+          eleveName: eleveName,
+          pin: pinCode,
+          isLoggedIn: true,
+          loginTime: new Date().toISOString()
+        };
+        try {
+          localStorage.setItem('lis_ecoute_session', JSON.stringify(eleveSession));
+        } catch(err) {}
+
+        // Redirection vers le tableau de bord élève
+        setTimeout(() => {
+          window.location.href = 'dashboard-eleve.html';
+        }, 600);
+      }
+
+      // Écoute des touches du pavé tactile
+      const keyButtons = document.querySelectorAll('.key-btn[data-key]');
+      keyButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          enterDigit(btn.getAttribute('data-key'));
+        });
+      });
+
+      document.getElementById('key-clear').addEventListener('click', removeDigit);
+      document.getElementById('key-enter').addEventListener('click', validateEleveLogin);
+
+      // Support clavier physique pour ordinateurs
+      window.addEventListener('keydown', function(e) {
+        if (currentRole === 'eleve') {
+          if (e.key >= '0' && e.key <= '9') {
+            enterDigit(e.key);
+          } else if (e.key === 'Backspace') {
+            removeDigit();
+          } else if (e.key === 'Enter') {
+            validateEleveLogin();
+          }
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>
